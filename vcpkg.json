@@ -1,0 +1,11 @@
+{
+  "name": "drug-lord-2",
+  "version-string": "1.0.0",
+  "builtin-baseline": "89f7bfc80e5f4f7a5846d71989dcfccccb2678e7",
+  "dependencies": [
+    {
+      "name": "catch2",
+      "version>=": "3.8.1"
+    }
+  ]
+}
