@@ -6,5 +6,4 @@ module;
 export module Game.World;
 
 export class World {
-
 };

@@ -7,5 +7,4 @@ export module Game.Location;
 
 export class Location {
 public:
-
 };
