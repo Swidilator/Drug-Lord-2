@@ -13,6 +13,9 @@ target_sources(game
         Game/World.ixx
         Game/Location.ixx
         Game/Drug.ixx
+        Game/DrugCollection.ixx
+        Game/DrugMarket.ixx
+        Game/Wallet.ixx
 )
 
 add_executable(Drug_Lord_2 main.cxx)
