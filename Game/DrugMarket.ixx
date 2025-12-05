@@ -13,6 +13,45 @@ import Game.Drug;
 import Game.DrugCollection;
 import Game.Wallet;
 
+export class DrugTransaction {
+    bool is_success_{false};
+    bool is_extracted_{false};
+    DrugCollection drug_collection_{};
+
+public:
+    DrugTransaction() = default;
+
+    DrugTransaction(const bool& is_success, DrugCollection&& dc)
+        : is_success_{is_success}, drug_collection_{std::move(dc)} {
+    }
+
+
+    DrugTransaction(const DrugTransaction& other) = delete;
+
+    auto operator=(const DrugTransaction& other) -> DrugTransaction& = delete;
+
+
+    DrugTransaction(DrugTransaction&& other) = default;
+
+    auto operator=(DrugTransaction&& other) noexcept -> DrugTransaction& = default;
+
+    ~DrugTransaction() = default;
+
+    [[nodiscard]] auto check_success() const -> const bool& {
+        return is_success_;
+    }
+
+    [[nodiscard]] auto check_extracted() const -> const bool& {
+        return is_extracted_;
+    }
+
+    [[nodiscard]] auto extract_drug_collection() -> DrugCollection&& {
+        is_extracted_ = true;
+        return std::move(drug_collection_);
+    }
+};
+
+
 export class DrugMarket {
     DrugCollection drug_collection_{};
 
