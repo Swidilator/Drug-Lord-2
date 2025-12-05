@@ -72,28 +72,30 @@ public:
     }
 
     [[nodiscard]] auto buy_drug(const std::string& drug_name, const int num,
-                                const std::weak_ptr<Wallet>& buyer_wallet) -> DrugCollection {
-        DrugCollection transfer_dc{};
-
-        auto wallet = buyer_wallet.lock();
+                                const std::weak_ptr<Wallet>& buyer_wallet) -> DrugTransaction {
+        const auto wallet = buyer_wallet.lock();
         if (!wallet) {
             throw std::runtime_error("buyer_wallet weak_ptr invalid.");
         }
 
         if (num * drug_prices_[drug_name] > wallet->get_balance()) {
-            throw std::runtime_error("buyer_wallet has insufficient funds.");
+            return std::move(DrugTransaction{});
         }
 
 
         if (drug_collection_.check_stock(drug_name) < num) {
-            throw std::runtime_error(std::format("Too few {} in DrugCollection", drug_name));
+            return std::move(DrugTransaction{});
         }
+
+        bool transaction_success{true};
+        DrugCollection transaction_dc{};
+
 
         for (int i{0}; i < num; i++) {
-            transfer_dc.add_drug(drug_collection_.remove_drug(drug_name));
-            wallet->remove_funds(drug_prices_[drug_name]);
+            transaction_dc.add_drug(drug_collection_.remove_drug(drug_name));
+            transaction_success = wallet->remove_funds(drug_prices_[drug_name]);
         }
 
-        return transfer_dc;
+        return std::move(DrugTransaction{transaction_success, std::move(transaction_dc)});
     }
 };
