@@ -14,6 +14,30 @@ export class DrugCollection {
     std::unordered_map<std::string, std::stack<std::unique_ptr<Drug> > > drugs_{};
 
 public:
+    DrugCollection() = default;
+
+    // Delete copy operations
+    DrugCollection(const DrugCollection& other) = delete;
+
+    auto operator=(const DrugCollection& other) -> DrugCollection& = delete;
+
+    // Move operations
+    DrugCollection(DrugCollection&& other) noexcept
+        : drugs_(std::move(other.drugs_)) {
+    }
+
+    auto operator=(DrugCollection&& other) noexcept -> DrugCollection& {
+        if (this == &other)
+            return *this;
+        drugs_ = std::move(other.drugs_);
+        return *this;
+    }
+
+    // Destructor
+    ~DrugCollection() = default;
+
+
+    // Other operations
     auto add_drug(std::unique_ptr<Drug>&& drug) -> void {
         drugs_[drug->get_name()].push(std::move(drug));
     }
