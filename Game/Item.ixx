@@ -21,7 +21,7 @@ export class Item {
     int price_last_sold_at_{0};
 
 public:
-    explicit Item(std::string name, const ItemType item_type)
+    Item(std::string name, const ItemType item_type)
         : name_{std::move(name)}, item_type_{item_type} {
     }
 
