@@ -58,12 +58,10 @@ export class ItemMarket {
     std::unordered_map<std::string, int> item_prices_{};
 
 public:
-
     ItemMarket() = default;
 
     explicit ItemMarket(ItemCollection&& item_collection)
-    :item_collection_{std::move(item_collection)}{
-
+        : item_collection_{std::move(item_collection)} {
     }
 
     auto get_collection() const -> const ItemCollection& {
