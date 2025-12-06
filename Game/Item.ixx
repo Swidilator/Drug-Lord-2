@@ -8,6 +8,7 @@ module;
 export module Game.Item;
 
 export enum class ItemType {
+    None,
     Drug,
     Weapon,
     Ammo,
