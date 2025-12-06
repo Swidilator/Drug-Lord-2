@@ -21,27 +21,27 @@ export class Item {
     int price_last_sold_at_{0};
 
 public:
-    explicit Item(std::string  name, const ItemType item_type)
+    explicit Item(std::string name, const ItemType item_type)
         : name_{std::move(name)}, item_type_{item_type} {
     }
 
-    [[nodiscard]] virtual auto get_name() const -> const std::string& {
+    [[nodiscard]] auto get_name() const -> const std::string& {
         return name_;
     }
 
-    [[nodiscard]] virtual auto get_price_last_bought_at() const -> int {
+    [[nodiscard]] auto get_price_last_bought_at() const -> int {
         return price_last_bought_at_;
     }
 
-    [[nodiscard]] virtual auto get_price_last_sold_at() const -> int {
+    [[nodiscard]] auto get_price_last_sold_at() const -> int {
         return price_last_sold_at_;
     }
 
-    virtual auto set_price_last_bought_at(const int price) -> void {
+    auto set_price_last_bought_at(const int price) -> void {
         price_last_bought_at_ = price;
     }
 
-    virtual auto set_price_last_sold_at(const int price) -> void {
+    auto set_price_last_sold_at(const int price) -> void {
         price_last_sold_at_ = price;
     }
 };
