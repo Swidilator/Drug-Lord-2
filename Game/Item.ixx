@@ -29,6 +29,10 @@ public:
         return name_;
     }
 
+    [[nodiscard]] auto get_item_type() const -> const ItemType& {
+        return item_type_;
+    }
+
     [[nodiscard]] auto get_price_last_bought_at() const -> int {
         return price_last_bought_at_;
     }
