@@ -25,6 +25,16 @@ public:
         : name_{std::move(name)}, item_type_{item_type} {
     }
 
+    Item(const Item&) = delete;
+
+    auto operator=(const Item&) -> Item& = delete;
+
+    Item(Item&&) = default;
+
+    auto operator=(Item&&) -> Item& = default;
+
+    ~Item() = default;
+
     [[nodiscard]] auto get_name() const -> const std::string& {
         return name_;
     }
