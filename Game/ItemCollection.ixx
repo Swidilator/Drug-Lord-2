@@ -7,26 +7,26 @@ module;
 #include <stack>
 #include <unordered_map>
 
-export module Game.DrugCollection;
-import Game.Drug;
+export module Game.ItemCollection;
+import Game.Item;
 
-export class DrugCollection {
-    std::unordered_map<std::string, std::stack<std::unique_ptr<Drug> > > drugs_{};
+export class ItemCollection {
+    std::unordered_map<std::string, std::stack<std::unique_ptr<Item> > > drugs_{};
 
 public:
-    DrugCollection() = default;
+    ItemCollection() = default;
 
     // Delete copy operations
-    DrugCollection(const DrugCollection& other) = delete;
+    ItemCollection(const ItemCollection& other) = delete;
 
-    auto operator=(const DrugCollection& other) -> DrugCollection& = delete;
+    auto operator=(const ItemCollection& other) -> ItemCollection& = delete;
 
     // Move operations
-    DrugCollection(DrugCollection&& other) noexcept
+    ItemCollection(ItemCollection&& other) noexcept
         : drugs_(std::move(other.drugs_)) {
     }
 
-    auto operator=(DrugCollection&& other) noexcept -> DrugCollection& {
+    auto operator=(ItemCollection&& other) noexcept -> ItemCollection& {
         if (this == &other)
             return *this;
         drugs_ = std::move(other.drugs_);
@@ -34,15 +34,15 @@ public:
     }
 
     // Destructor
-    ~DrugCollection() = default;
+    ~ItemCollection() = default;
 
 
     // Other operations
-    auto add_drug(std::unique_ptr<Drug>&& drug) -> void {
+    auto add_drug(std::unique_ptr<Item>&& drug) -> void {
         drugs_[drug->get_name()].push(std::move(drug));
     }
 
-    auto remove_drug(const std::string& drug_name) -> std::unique_ptr<Drug> {
+    auto remove_drug(const std::string& drug_name) -> std::unique_ptr<Item> {
         if (drugs_[drug_name].empty()) {
             throw std::runtime_error(std::format("No more {} in DrugCollection", drug_name));
         }

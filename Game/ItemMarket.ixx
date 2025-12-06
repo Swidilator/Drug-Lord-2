@@ -8,20 +8,20 @@ module;
 #include <string>
 #include <unordered_map>
 
-export module Game.DrugMarket;
-import Game.Drug;
-import Game.DrugCollection;
+export module Game.ItemMarket;
+import Game.Item;
+import Game.ItemCollection;
 import Game.Wallet;
 
 export class DrugTransaction {
     bool is_success_{false};
     bool is_extracted_{false};
-    DrugCollection drug_collection_{};
+    ItemCollection drug_collection_{};
 
 public:
     DrugTransaction() = default;
 
-    DrugTransaction(const bool& is_success, DrugCollection&& dc)
+    DrugTransaction(const bool& is_success, ItemCollection&& dc)
         : is_success_{is_success}, drug_collection_{std::move(dc)} {
     }
 
@@ -45,25 +45,25 @@ public:
         return is_extracted_;
     }
 
-    [[nodiscard]] auto extract_drug_collection() -> DrugCollection&& {
+    [[nodiscard]] auto extract_drug_collection() -> ItemCollection&& {
         is_extracted_ = true;
         return std::move(drug_collection_);
     }
 };
 
 
-export class DrugMarket {
-    DrugCollection drug_collection_{};
+export class ItemMarket {
+    ItemCollection drug_collection_{};
 
     std::unordered_map<std::string, int> drug_prices_{};
 
 public:
     // test
-    DrugMarket() {
+    ItemMarket() {
         drug_prices_["hash"] = 10;
     }
 
-    auto get_collection() const -> const DrugCollection& {
+    auto get_collection() const -> const ItemCollection& {
         return drug_collection_;
     }
 
@@ -88,7 +88,7 @@ public:
         }
 
         bool transaction_success{true};
-        DrugCollection transaction_dc{};
+        ItemCollection transaction_dc{};
 
 
         for (int i{0}; i < num; i++) {
