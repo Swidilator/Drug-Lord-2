@@ -7,5 +7,4 @@ export module Game.Game;
 
 export class Game {
 public:
-
 };

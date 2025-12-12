@@ -8,17 +8,17 @@ add_library(game)
 target_sources(game
         PUBLIC
         FILE_SET CXX_MODULES FILES
-        Game/Character.ixx
-        Game/Game.ixx
-        Game/World.ixx
-        Game/Location.ixx
-        Game/Drug.ixx
-        Game/DrugCollection.ixx
-        Game/DrugMarket.ixx
-        Game/Wallet.ixx
+        src/Game/Character.ixx
+        src/Game/Game.ixx
+        src/Game/World.ixx
+        src/Game/Location.ixx
+        src/Game/Item.ixx
+        src/Game/ItemCollection.ixx
+        src/Game/ItemMarket.ixx
+        src/Game/Wallet.ixx
 )
 
-add_executable(Drug_Lord_2 main.cxx)
+add_executable(Drug_Lord_2 src/main.cxx)
 
 target_link_libraries(Drug_Lord_2 game)
 
