@@ -14,7 +14,7 @@ public:
 
     Wallet(const long long int balance) : balance_{balance} {
         if (balance < 0) {
-            throw std::runtime_error("Wallet balance is initialised as negative");
+            throw std::domain_error("Wallet balance is initialised as negative");
         }
     }
 
