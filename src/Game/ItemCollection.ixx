@@ -59,6 +59,10 @@ public:
         return std::move(return_drug);
     }
 
+    [[nodiscard]] auto get_stock_list() const -> std::vector<std::string> {
+        return item_map_ | std::views::keys | std::ranges::to<std::vector<std::string>>();
+    }
+
     [[nodiscard]] auto check_stock(const std::string& item_name) const -> std::size_t {
         if (!item_map_.contains(item_name)) {
             return 0;
