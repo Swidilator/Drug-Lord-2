@@ -15,6 +15,7 @@ target_sources(game
         src/Game/Item.ixx
         src/Game/ItemCollection.ixx
         src/Game/ItemMarket.ixx
+        src/Game/ItemTransaction.ixx
         src/Game/Wallet.ixx
 )
 
