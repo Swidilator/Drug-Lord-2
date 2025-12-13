@@ -18,11 +18,6 @@ TEST_CASE("Use TDD,Behaviour-Driven Design, and Black Box Testing") {
 }
 
 
-
-
-
-
-
 TEST_CASE("ItemMarket constructors", "[ItemMarket]") {
     constexpr int num_drugs_1 = 8;
     constexpr int num_drugs_2 = 200;
