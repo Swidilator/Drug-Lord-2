@@ -42,6 +42,10 @@ public:
     }
 
     [[nodiscard]] auto extract_item_collection() -> ItemCollection&& {
+        if (is_extracted_) {
+            throw std::logic_error("ItemCollections cannot be re-extracted.");
+        }
+
         is_extracted_ = true;
         return std::move(item_collection_);
     }
