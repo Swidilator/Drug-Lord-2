@@ -29,5 +29,6 @@ add_executable(tests test/Game/test.cpp
         test/Game/Test_Wallet.cpp
         test/Game/Test_ItemCollection.cpp
         test/Game/Test_Item.cpp
+        test/Game/Test_ItemTransaction.cpp
 )
 target_link_libraries(tests PRIVATE Catch2::Catch2WithMain game)
