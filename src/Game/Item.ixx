@@ -30,9 +30,21 @@ public:
 
     auto operator=(const Item&) -> Item& = delete;
 
-    Item(Item&&) = default;
+    Item(Item&& other) noexcept
+        : name_{std::exchange(other.name_,"")},
+          item_type_{std::exchange(other.item_type_, ItemType::None)},
+          price_last_bought_at_{std::exchange(other.price_last_bought_at_, 0)},
+          price_last_sold_at_{std::exchange(other.price_last_sold_at_, 0)} {
+    }
 
-    auto operator=(Item&&) -> Item& = default;
+    auto operator=(Item&& other) noexcept -> Item& {
+        name_ = std::exchange(other.name_, "");
+        item_type_ = std::exchange(other.item_type_, ItemType::None);
+        price_last_bought_at_ = std::exchange(other.price_last_bought_at_, 0);
+        price_last_sold_at_ = std::exchange(other.price_last_sold_at_, 0);
+
+        return *this;
+    };
 
     ~Item() = default;
 
