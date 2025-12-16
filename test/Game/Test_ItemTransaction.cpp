@@ -44,7 +44,7 @@ TEST_CASE("ItemTransaction - Extracting an ItemTransaction retrieves its content
     CHECK(ic2.get_stock_list().size() == 1);
     CHECK(ic2.check_stock("test_item") == 1);
 
-    auto i2 = ic2.remove_item("test_item");
+    auto i2 = ic2.retrieve_item("test_item");
     CHECK(i2.get_item_type() == ItemType::Drug);
     CHECK(i2.get_price_last_bought_at() == 25);
     CHECK(i2.get_price_last_sold_at() == 30);

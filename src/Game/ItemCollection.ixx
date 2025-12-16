@@ -2,6 +2,7 @@
 // Created by kyle on 2025/12/01.
 //
 module;
+#include <algorithm>
 #include <format>
 #include <queue>
 #include <unordered_map>
@@ -50,17 +51,28 @@ public:
         item_map_[item.get_name()].second.push(std::move(item));
     }
 
-    auto remove_item(const std::string& item_name) -> Item {
+    auto retrieve_item(const std::string& item_name) -> Item {
         if (!item_map_.contains(item_name) or item_map_[item_name].second.empty()) {
-            throw std::runtime_error(std::format("No more {} in DrugCollection", item_name));
+            throw std::out_of_range(std::format("No more {} in DrugCollection", item_name));
         }
         auto return_drug = std::move(item_map_[item_name].second.front());
         item_map_[item_name].second.pop();
+
+        if (item_map_[item_name].second.empty()) {
+            item_map_.erase(item_name);
+        }
+
         return std::move(return_drug);
     }
 
-    [[nodiscard]] auto get_stock_list() const -> std::vector<std::string> {
-        return item_map_ | std::views::keys | std::ranges::to<std::vector<std::string>>();
+    [[nodiscard]] auto get_stock_list() const -> std::unordered_map<std::string, std::pair<ItemType, std::size_t>> {
+        std::unordered_map<std::string, std::pair<ItemType, std::size_t>> out;
+
+        for (const auto& [key, value] : item_map_) {
+            out[key] = {value.first, value.second.size()};
+        }
+
+        return out;
     }
 
     [[nodiscard]] auto check_stock(const std::string& item_name) const -> std::size_t {
