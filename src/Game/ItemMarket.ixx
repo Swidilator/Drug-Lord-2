@@ -7,6 +7,7 @@ module;
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
+#include <utility>
 
 export module Game.ItemMarket;
 import Game.Item;
@@ -22,8 +23,8 @@ export class ItemMarket {
 public:
     ItemMarket() = default;
 
-    explicit ItemMarket(ItemCollection&& item_collection)
-        : item_collection_{std::move(item_collection)} {
+    ItemMarket(ItemCollection&& item_collection, std::unordered_map<std::string, int> item_prices)
+    : item_collection_{std::move(item_collection)}, item_prices_{std::move(item_prices)} {
     }
 
     auto get_collection() const -> const ItemCollection& {
@@ -55,7 +56,7 @@ public:
 
 
         for (int i{0}; i < num; i++) {
-            transaction_ic.add_item(item_collection_.remove_item(item_name));
+            transaction_ic.add_item(item_collection_.retrieve_item(item_name));
             transaction_success = wallet->remove_funds(item_prices_[item_name]);
         }
 
