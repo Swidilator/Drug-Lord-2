@@ -2,10 +2,7 @@
 // Created by kyle on 2025/12/01.
 //
 
-#include <unordered_map>
-#include <catch2/catch_test_macros.hpp>
-
-#include "test_helpers.h"
+#include "test_setup.h"
 
 import Game.Item;
 import Game.ItemCollection;

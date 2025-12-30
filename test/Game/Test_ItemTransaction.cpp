@@ -1,7 +1,7 @@
 //
 // Created by kyle on 2025/12/13.
 //
-#include <catch2/catch_test_macros.hpp>
+#include "test_setup.h"
 
 import Game.ItemTransaction;
 import Game.ItemCollection;
