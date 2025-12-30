@@ -15,15 +15,16 @@ export enum class ItemType {
     Armour
 };
 
-export class Item {
+export template<ItemType T>
+class Item {
     std::string name_{};
-    ItemType item_type_;
+    ItemType item_type_{T};
     int price_last_bought_at_{0};
     int price_last_sold_at_{0};
 
 public:
-    Item(std::string name, const ItemType item_type)
-        : name_{std::move(name)}, item_type_{item_type} {
+    Item(std::string name)
+        : name_{std::move(name)} {
     }
 
     Item(const Item&) = delete;
