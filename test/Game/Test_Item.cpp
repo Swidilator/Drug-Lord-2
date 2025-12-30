@@ -9,7 +9,7 @@ import Game.Item;
 // Test
 
 TEST_CASE("Item - A new Item should have the name and ItemType from arguments", "[Item]") {
-    const Item i{"test_item", ItemType::Drug};
+    const Item<ItemType::Drug> i{"test_item"};
 
     CHECK(i.get_name() == "test_item");
     CHECK(i.get_item_type() == ItemType::Drug);
@@ -19,7 +19,7 @@ TEST_CASE("Item - A new Item should have the name and ItemType from arguments", 
 }
 
 TEST_CASE("Item - An Item can have it's bought and sold values changed", "[Item]") {
-    Item i{"test_item", ItemType::Drug};
+    Item<ItemType::Drug> i{"test_item"};
 
     CHECK(i.get_price_last_bought_at() == 0);
     CHECK(i.get_price_last_sold_at() == 0);
@@ -32,7 +32,7 @@ TEST_CASE("Item - An Item can have it's bought and sold values changed", "[Item]
 }
 
 TEST_CASE("Item - An Item is moved correctly", "[Item]") {
-    Item i{"test_item", ItemType::Drug};
+    Item<ItemType::Drug> i{"test_item"};
     i.set_price_last_bought_at(25);
     i.set_price_last_sold_at(44);
 
