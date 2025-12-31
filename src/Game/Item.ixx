@@ -2,6 +2,7 @@
 // Created by kyle on 2025/11/30.
 //
 module;
+#include <stdexcept>
 #include <string>
 #include <utility>
 
@@ -66,10 +67,16 @@ public:
     }
 
     auto set_price_last_bought_at(const int price) -> void {
+        if (price < 0) {
+            throw std::out_of_range("price cannot be less than 0");
+        }
         price_last_bought_at_ = price;
     }
 
     auto set_price_last_sold_at(const int price) -> void {
+        if (price < 0) {
+            throw std::out_of_range("price cannot be less than 0");
+        }
         price_last_sold_at_ = price;
     }
 };
