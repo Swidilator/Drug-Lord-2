@@ -10,9 +10,11 @@ module;
 
 export module Game.ItemCollection;
 import Game.Item;
+import Game.ItemCollectionStockCount;
 
-export class ItemCollection {
-    std::unordered_map<std::string, std::pair<ItemType, std::queue<Item> > > item_map_{};
+export template<ItemType T>
+class ItemCollection {
+    std::unordered_map<std::string, std::queue<Item<T> > > item_map_{};
 
 public:
     ItemCollection() = default;
@@ -32,47 +34,35 @@ public:
 
 
     // Other operations
-    auto add_item(Item&& item) -> void {
+    auto add_item(Item<T>&& item) -> void {
         if (!item_map_.contains(item.get_name())) {
-            item_map_[item.get_name()] = {item.get_item_type(), {}};
+            item_map_[item.get_name()] = {};
         }
 
-        if (item_map_[item.get_name()].first != item.get_item_type()) {
-            throw std::runtime_error("Type mismatch between existing container type and new item type.");
-        }
-
-        item_map_[item.get_name()].second.push(std::move(item));
+        item_map_[item.get_name()].push(std::move(item));
     }
 
-    auto retrieve_item(const std::string& item_name) -> Item {
-        if (!item_map_.contains(item_name) or item_map_[item_name].second.empty()) {
-            throw std::out_of_range(std::format("No more {} in DrugCollection", item_name));
+    auto retrieve_item(const std::string& item_name) -> Item<T> {
+        if (!item_map_.contains(item_name) or item_map_[item_name].empty()) {
+            throw std::out_of_range(std::format("No more {} in ItemCollection", item_name));
         }
-        auto return_drug = std::move(item_map_[item_name].second.front());
-        item_map_[item_name].second.pop();
+        auto return_item = std::move(item_map_[item_name].front());
+        item_map_[item_name].pop();
 
-        if (item_map_[item_name].second.empty()) {
+        if (item_map_[item_name].empty()) {
             item_map_.erase(item_name);
         }
 
-        return std::move(return_drug);
+        return std::move(return_item);
     }
 
-    [[nodiscard]] auto get_stock_list() const -> std::unordered_map<std::string, std::pair<ItemType, std::size_t>> {
-        std::unordered_map<std::string, std::pair<ItemType, std::size_t>> out;
+    [[nodiscard]] auto get_stock_count() const -> ItemCollectionStockCount<T> {
+        std::unordered_map<std::string, std::size_t> out;
 
-        for (const auto& [key, value] : item_map_) {
-            out[key] = {value.first, value.second.size()};
+        for (const auto& [key, value]: item_map_) {
+            out[key] = value.size();
         }
 
-        return out;
-    }
-
-    [[nodiscard]] auto check_stock(const std::string& item_name) const -> std::size_t {
-        if (!item_map_.contains(item_name)) {
-            return 0;
-        }
-
-        return item_map_.at(item_name).second.size();
+        return {std::move(out)};
     }
 };
