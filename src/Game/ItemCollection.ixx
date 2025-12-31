@@ -23,16 +23,9 @@ public:
     auto operator=(const ItemCollection& other) -> ItemCollection& = delete;
 
     // Move operations
-    ItemCollection(ItemCollection&& other) noexcept
-        : item_map_(std::move(other.item_map_)) {
-    }
+    ItemCollection(ItemCollection&& other) = default;
 
-    auto operator=(ItemCollection&& other) noexcept -> ItemCollection& {
-        if (this == &other)
-            return *this;
-        item_map_ = std::move(other.item_map_);
-        return *this;
-    }
+    auto operator=(ItemCollection&& other) -> ItemCollection& = default;
 
     // Destructor
     ~ItemCollection() = default;
