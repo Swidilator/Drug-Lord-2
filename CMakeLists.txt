@@ -14,6 +14,7 @@ target_sources(game
         src/Game/Location.ixx
         src/Game/Item.ixx
         src/Game/ItemCollection.ixx
+        src/Game/ItemCollectionStockCount.ixx
         src/Game/ItemMarket.ixx
         src/Game/ItemTransaction.ixx
         src/Game/Wallet.ixx
@@ -30,6 +31,7 @@ add_executable(tests test/Game/test.cpp
         test/Game/Test_ItemCollection.cpp
         test/Game/Test_Item.cpp
         test/Game/Test_ItemTransaction.cpp
+        test/Game/Test_ItemCollectionStockCount.cpp
 )
 
 target_include_directories(tests PRIVATE test)
