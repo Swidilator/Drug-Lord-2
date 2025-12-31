@@ -6,69 +6,65 @@
 
 import Game.Item;
 import Game.ItemCollection;
+import Game.ItemCollectionStockCount;
 
 TEST_CASE("ItemCollection - A new ItemCollection is empty", "[ItemCollection]") {
-    const ItemCollection ic{};
-    CHECK(ic.get_stock_list().empty() == true);
+    const ItemCollection<ItemType::Drug> ic{};
+    CHECK(ic.get_stock_count().empty() == true);
 }
 
 TEST_CASE("ItemCollection - An Item can be moved into an ItemCollection", "[ItemCollection]") {
-    ItemCollection ic{};
-    Item i{"test_item", ItemType::Drug};
+    ItemCollection<ItemType::Drug> ic{};
+    Item<ItemType::Drug> i{"test_item"};
     ic.add_item(std::move(i));
 
     // Check inside ItemContainer
-    CHECK(ic.check_stock("test_item") == 1);
-    const auto [item_type, item_count] = ic.get_stock_list()["test_item"];
-    CHECK(item_type == ItemType::Drug);
-    CHECK(item_count == 1);
+    const auto stock_count = ic.get_stock_count();
+    CHECK(stock_count.get_item_type() == ItemType::Drug);
+    CHECK(stock_count["test_item"] == 1);
 }
 
 TEST_CASE("ItemCollection - An Item in an ItemCollection can be retrieved", "[ItemCollection]") {
-    ItemCollection ic{};
-    Item i{"test_item", ItemType::Drug};
+    ItemCollection<ItemType::Drug> ic{};
+    Item<ItemType::Drug> i{"test_item",};
     i.set_price_last_bought_at(30);
     ic.add_item(std::move(i));
 
     const auto io = ic.retrieve_item("test_item");
-    CHECK(ic.get_stock_list().empty());
-    CHECK(ic.check_stock("test_item") == 0);
+    const auto stock_count = ic.get_stock_count();
+    CHECK(stock_count.empty() == true);
+    CHECK(stock_count["test_item"] == 0);
 
     CHECK(io.get_price_last_bought_at() == 30);
 }
 
 TEST_CASE("ItemCollection - An item not in an ItemCollection cannot be retrieved", "[ItemCollection]") {
-    ItemCollection ic{};
+    ItemCollection<ItemType::Drug> ic{};
     CHECK_THROWS_AS(ic.retrieve_item("test_item"), std::out_of_range);
 }
 
-TEST_CASE("ItemCollection - Removing the last of an item_name will remove that category", "ItemCollection") {
-    ItemCollection ic{};
-    ic.add_item(Item{"test_item", ItemType::Drug});
-    // Item category exists, does not throw
-    CHECK(ic.get_stock_list().at("test_item").first == ItemType::Drug);
+TEST_CASE("ItemCollection - A retrieved stock count contains all items", "[ItemCollection]") {
+    ItemCollection<ItemType::Drug> ic{};
+    const auto stock_count_empty{ic.get_stock_count()};
+    CHECK(stock_count_empty.empty() == true);
 
-    auto i{ic.retrieve_item("test_item")};
-    // Item category has been removed, throws
-    CHECK_THROWS_AS(ic.get_stock_list().at("test_item"), std::out_of_range);
+    ic.add_item(Item<ItemType::Drug>{"test_item_1"});
+
+    ic.add_item(Item<ItemType::Drug>{"test_item_2"});
+    ic.add_item(Item<ItemType::Drug>{"test_item_2"});
+
+    const auto stock_count_full{ic.get_stock_count()};
+
+    CHECK(stock_count_full.empty() == false);
+    CHECK(stock_count_full["test_item_1"] == 1);
+
+    CHECK(stock_count_full["test_item_2"] == 2);
 }
 
-TEST_CASE("ItemCollection - A stock list can be retrieved from an ItemCollection", "[ItemCollection]") {
-    ItemCollection ic{};
-    const auto stock_list_empty{ic.get_stock_list()};
-    CHECK(stock_list_empty.empty() == true);
+TEST_CASE("ItemCollection - A retrieved stock count is the same ItemType", "[ItemCollection]") {
+    const ItemCollection<ItemType::Drug> ic1{};
+    CHECK(ic1.get_stock_count().get_item_type() == ItemType::Drug);
 
-    ic.add_item(Item{"test_item_1", ItemType::Drug});
-
-    ic.add_item(Item{"test_item_2", ItemType::Ammo});
-    ic.add_item(Item{"test_item_2", ItemType::Ammo});
-
-    const auto stock_list_full{ic.get_stock_list()};
-
-    CHECK(stock_list_full.empty() == false);
-    CHECK(stock_list_full.at("test_item_1").first == ItemType::Drug);
-    CHECK(stock_list_full.at("test_item_1").second == 1);
-
-    CHECK(stock_list_full.at("test_item_2").first == ItemType::Ammo);
-    CHECK(stock_list_full.at("test_item_2").second == 2);
+    const ItemCollection<ItemType::Ammo> ic2{};
+    CHECK(ic2.get_stock_count().get_item_type() == ItemType::Ammo);
 }
