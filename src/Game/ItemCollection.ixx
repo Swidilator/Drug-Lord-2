@@ -53,7 +53,7 @@ public:
             item_map_.erase(item_name);
         }
 
-        return std::move(return_item);
+        return return_item;
     }
 
     [[nodiscard]] auto get_stock_count() const -> ItemCollectionStockCount<T> {
