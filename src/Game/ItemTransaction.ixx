@@ -6,18 +6,20 @@ module;
 
 export module Game.ItemTransaction;
 
+import Game.Item;
 import Game.ItemCollection;
 
 
-export class ItemTransaction {
+export template<ItemType T>
+class ItemTransaction {
     bool is_success_{false};
     bool is_extracted_{false};
-    ItemCollection item_collection_{};
+    ItemCollection<T> item_collection_{};
 
 public:
     ItemTransaction() = default;
 
-    ItemTransaction(const bool& is_success, ItemCollection&& dc)
+    ItemTransaction(const bool& is_success, ItemCollection<T>&& dc)
         : is_success_{is_success}, item_collection_{std::move(dc)} {
     }
 
@@ -41,7 +43,7 @@ public:
         return is_extracted_;
     }
 
-    [[nodiscard]] auto extract_item_collection() -> ItemCollection&& {
+    [[nodiscard]] auto extract_item_collection() -> ItemCollection<T>&& {
         if (is_extracted_) {
             throw std::logic_error("ItemCollections cannot be re-extracted.");
         }

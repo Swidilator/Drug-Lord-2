@@ -3,46 +3,50 @@
 //
 #include "test_setup.h"
 
-import Game.ItemTransaction;
-import Game.ItemCollection;
 import Game.Item;
+import Game.ItemCollection;
+import Game.ItemTransaction;
+
 
 TEST_CASE("ItemTransaction - A new default ItemTransaction is ready to use", "[ItemTransaction]") {
-    ItemTransaction it{};
+    ItemTransaction<ItemType::Drug> it{};
 
     CHECK(it.check_success() == false);
     CHECK(it.check_extracted() == false);
     // This needs to happen after the extracted check, as this extracts it
-    CHECK(it.extract_item_collection().get_stock_list().empty() == true);
+    CHECK(it.extract_item_collection().get_stock_count().empty() == true);
 }
 
 TEST_CASE("ItemTransaction - An ItemTransaction moves an existing ItemCollection", "[ItemTransaction]") {
-    ItemCollection ic{};
+    ItemCollection<ItemType::Drug> ic{};
 
-    ic.add_item(Item{"test_item", ItemType::Drug});
-    CHECK(ic.get_stock_list().empty() == false);
-    CHECK(ic.check_stock("test_item") == 1);
+    ic.add_item(Item<ItemType::Drug>{"test_item"});
+    auto sc = ic.get_stock_count();
+    CHECK(sc.empty() == false);
+    CHECK(sc["test_item"] == 1);
 
     ItemTransaction it{true, std::move(ic)};
 
-    CHECK(ic.get_stock_list().empty() == true);
-    CHECK(ic.check_stock("test_item") == 0);
+    sc = ic.get_stock_count();
+    CHECK(sc.empty() == true);
+    CHECK(sc["test_item"] == 0);
 }
 
 TEST_CASE("ItemTransaction - Extracting an ItemTransaction retrieves its contents", "[ItemTransaction]") {
-    Item i{"test_item", ItemType::Drug};
+    Item<ItemType::Drug> i{"test_item"};
     i.set_price_last_bought_at(25);
     i.set_price_last_sold_at(30);
 
-    ItemCollection ic{};
+    ItemCollection<ItemType::Drug> ic{};
     ic.add_item(std::move(i));
 
-    ItemTransaction it{true, std::move(ic)};
+    ItemTransaction<ItemType::Drug> it{true, std::move(ic)};
 
     auto ic2 = it.extract_item_collection();
     CHECK(it.check_extracted() == true);
-    CHECK(ic2.get_stock_list().size() == 1);
-    CHECK(ic2.check_stock("test_item") == 1);
+    auto sc = ic2.get_stock_count();
+    CHECK(sc.size() == 1);
+    CHECK(sc["test_item"] == 1);
 
     auto i2 = ic2.retrieve_item("test_item");
     CHECK(i2.get_item_type() == ItemType::Drug);
@@ -51,8 +55,8 @@ TEST_CASE("ItemTransaction - Extracting an ItemTransaction retrieves its content
 }
 
 TEST_CASE("ItemTransaction - An extracted ItemTransaction cannot be re-extracted", "[ItemTransaction]") {
-    ItemCollection ic{};
-    ItemTransaction it{true, std::move(ic)};
+    ItemCollection<ItemType::Drug> ic{};
+    ItemTransaction<ItemType::Drug> it{true, std::move(ic)};
     auto ic2 = it.extract_item_collection();
     CHECK_THROWS_AS(it.extract_item_collection(), std::logic_error);
 }
