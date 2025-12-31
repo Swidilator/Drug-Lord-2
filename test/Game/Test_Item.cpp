@@ -48,3 +48,10 @@ TEST_CASE("Item - An Item is moved correctly", "[Item]") {
     CHECK(i2.get_price_last_bought_at() == 25);
     CHECK(i2.get_price_last_sold_at() == 44);
 }
+
+TEST_CASE("Item - An Item cannot have negative bought and sold values", "[Item]") {
+    Item<ItemType::Drug> item{"test_item"};
+
+    CHECK_THROWS_AS(item.set_price_last_bought_at(-1), std::out_of_range);
+    CHECK_THROWS_AS(item.set_price_last_sold_at(-1), std::out_of_range);
+}
