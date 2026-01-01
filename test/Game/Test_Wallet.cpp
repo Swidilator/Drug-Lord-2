@@ -22,20 +22,18 @@ TEST_CASE("Wallet - A new wallet has funds matching the constructor argument val
 
 TEST_CASE("Wallet - A wallet can have funds added", "[Wallet]") {
     Wallet w{25};
-    w.add_funds(26);
-    CHECK(w.get_balance() == 51);
+    const auto new_balance = w.add_funds(26);
+    CHECK(new_balance == 51);
 }
 
 TEST_CASE("Wallet - A wallet can have funds removed if it contains enough funds", "[Wallet]") {
     Wallet w{25};
-    const auto result{w.remove_funds(16)};
-    CHECK(result == true);
-    CHECK(w.get_balance() == 9);
+    const auto new_balance{w.remove_funds(16)};
+    CHECK(new_balance == 9);
 }
 
 TEST_CASE("Wallet - A wallet can't have more funds removed than it contains", "[Wallet]") {
     Wallet w{25};
-    const auto result{w.remove_funds(27)};
-    CHECK(result == false);
+    CHECK_THROWS_AS(w.remove_funds(27), std::out_of_range);
     CHECK(w.get_balance() == 25);
 }

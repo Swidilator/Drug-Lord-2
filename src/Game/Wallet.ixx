@@ -22,16 +22,17 @@ public:
         return balance_;
     }
 
-    auto add_funds(const long long int value) -> void {
+    auto add_funds(const long long int value) -> long long int {
         balance_ += value;
+        return get_balance();
     }
 
-    [[nodiscard]] auto remove_funds(const long long int value) -> bool {
+    auto remove_funds(const long long int value) -> long long int {
         if (value > balance_) {
-            return false;
+            throw std::out_of_range("Insufficient balance in wallet");
         }
 
         balance_ -= value;
-        return true;
+        return get_balance();
     }
 };
