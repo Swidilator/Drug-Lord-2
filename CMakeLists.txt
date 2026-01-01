@@ -31,6 +31,7 @@ add_executable(tests test/Game/test.cpp
         test/Game/Test_ItemCollection.cpp
         test/Game/Test_Item.cpp
         #test/Game/Test_ItemTransaction.cpp
+        test/Game/Test_ItemMarket.cpp
         #test/Game/Test_ItemCollectionStockCount.cpp
 )
 
