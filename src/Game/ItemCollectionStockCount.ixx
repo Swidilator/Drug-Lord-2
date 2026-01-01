@@ -14,20 +14,22 @@ export template<ItemType T>
 class ItemCollectionStockCount {
     ItemType item_type_{};
     std::unordered_map<std::string, std::size_t> item_stock_{};
-
 public:
-    ItemCollectionStockCount(std::unordered_map<std::string, std::size_t>&& item_stock)
-        : item_type_{T}, item_stock_{std::move(item_stock)} {
+
+
+    ItemCollectionStockCount(const std::unordered_map<std::string, std::size_t>& item_stock)
+        : item_type_{T}, item_stock_{item_stock} {
     }
 
-    auto operator[](const std::string& item_name) const -> std::size_t {
-        if (!item_stock_.contains(item_name)) {
-            return 0;
-        }
-        return item_stock_.at(item_name);
+    [[nodiscard]] auto get_item_type() const -> ItemType {
+        return item_type_;
     }
 
-    [[nodiscard]] auto size() const -> std::size_t {
+    [[nodiscard]] auto get_item_stock() const -> const std::unordered_map<std::string, std::size_t>& {
+        return item_stock_;
+    }
+
+    [[nodiscard]] auto total_items() const -> std::size_t {
         auto non_zero_view = item_stock_
                              | std::views::transform([](const auto& e) { return e.second; })
                              | std::views::filter([](const auto& e) {
@@ -35,13 +37,5 @@ public:
                              });
 
         return std::ranges::fold_left(non_zero_view, 0, std::plus{});
-    }
-
-    [[nodiscard]] auto empty() const -> bool {
-        return size() == 0;
-    }
-
-    [[nodiscard]] auto get_item_type() const -> ItemType {
-        return item_type_;
     }
 };
