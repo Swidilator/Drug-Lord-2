@@ -11,11 +11,11 @@ import Game.ItemMarket;
 import Game.ItemCollection;
 import Game.Wallet;
 
-template <ItemType T>
+template<ItemType T>
 auto setup_item_market() -> ItemMarket<T> {
     std::unordered_map<std::string, int> item_prices{
-                {"test_item_1", 5},
-                {"test_item_2", 4}
+        {"test_item_1", 5},
+        {"test_item_2", 4}
     };
 
     ItemCollection<T> ic{};
@@ -27,10 +27,6 @@ auto setup_item_market() -> ItemMarket<T> {
     return {std::move(ic), item_prices};
 }
 
-TEST_CASE("ItemMarket: ", "[ItemMarket]") {
-    CHECK(false);
-};
-
 TEST_CASE("ItemMarket: can be bought from", "[ItemMarket]") {
     auto wallet = std::make_shared<Wallet>(200);
     auto market = setup_item_market<ItemType::Drug>();
@@ -39,7 +35,7 @@ TEST_CASE("ItemMarket: can be bought from", "[ItemMarket]") {
     auto purchase_ic = market.buy_items(
         {{"test_item_1", 1}},
         wallet
-        );
+    );
     CHECK(wallet->get_balance() == 195);
     CHECK(purchase_ic.total_items() == 1);
     CHECK(purchase_ic.get_stock_count()["test_item_1"] == 1);
@@ -58,7 +54,7 @@ TEST_CASE("ItemMarket: can be sold to", "[ItemMarket]") {
         market.sell_items(
             std::move(sell_ic),
             wallet
-            );
+        );
     }
     CHECK(wallet->get_balance() == 205);
     CHECK(market.get_stock_count().at("test_item_1") == 2);
@@ -70,11 +66,10 @@ TEST_CASE("ItemMarket: only allows buying items that have a price", "[ItemMarket
 
     // Buy - Does not work
     CHECK_THROWS_AS(market.buy_items(
-        {{"test_item_3", 1}},
-        wallet
-        ), std::domain_error);
+                        {{"test_item_3", 1}},
+                        wallet
+                    ), std::domain_error);
     CHECK(wallet->get_balance() == 200);
-
 };
 
 TEST_CASE("ItemMarket: allows only selling items that have a price", "[ItemMarket]") {
@@ -86,8 +81,8 @@ TEST_CASE("ItemMarket: allows only selling items that have a price", "[ItemMarke
     sell_ic_fails.add_item({"test_item_3"});
     CHECK_THROWS_AS(
         market.sell_items(
-        std::move(sell_ic_fails),
-        wallet
+            std::move(sell_ic_fails),
+            wallet
         ),
         std::domain_error
     );
@@ -98,9 +93,9 @@ TEST_CASE("ItemMarket: can accept multiple items of different names when buying"
     auto market = setup_item_market<ItemType::Drug>();
 
     auto purchase_ic = market.buy_items(
-        {{"test_item_1", 1},{"test_item_2", 1}},
+        {{"test_item_1", 1}, {"test_item_2", 1}},
         wallet
-        );
+    );
 
     CHECK(purchase_ic.total_items() == 2);
     CHECK(purchase_ic.get_stock_count()["test_item_1"] == 1);
@@ -114,9 +109,7 @@ TEST_CASE("ItemMarket: can accept multiple items of different names when buying"
 
 TEST_CASE("ItemMarket: can accept multiple items of different names when selling", "[ItemMarket]") {
     auto wallet = std::make_shared<Wallet>(200);
-    auto market = setup_item_market<ItemType::Drug>();
-
-    {
+    auto market = setup_item_market<ItemType::Drug>(); {
         ItemCollection<ItemType::Drug> ic{};
         ic.add_item({"test_item_1"});
         ic.add_item({"test_item_1"});
@@ -186,7 +179,7 @@ TEST_CASE("ItemMarket: throws when insufficient items when buying", "[ItemMarket
 
 TEST_CASE("ItemMarket: throws when non-priced items are present on creation", "[ItemMarket]") {
     std::unordered_map<std::string, int> item_prices{
-                    {"test_item_1", 5}
+        {"test_item_1", 5}
     };
 
     ItemCollection<ItemType::Drug> ic{};
@@ -196,11 +189,9 @@ TEST_CASE("ItemMarket: throws when non-priced items are present on creation", "[
 
     try {
         ItemMarket a{std::move(ic), item_prices};
-    }
-    catch (const std::domain_error&) {
+    } catch (const std::domain_error&) {
         CHECK(true);
-    }
-    catch (...) {
+    } catch (...) {
         CHECK(false);
     }
 }
