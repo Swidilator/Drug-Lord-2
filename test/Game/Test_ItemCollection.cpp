@@ -7,12 +7,12 @@
 import Game.Item;
 import Game.ItemCollection;
 
-TEST_CASE("ItemCollection - A new ItemCollection is empty", "[ItemCollection]") {
+TEST_CASE("ItemCollection: is empty when new", "[ItemCollection]") {
     const ItemCollection<ItemType::Drug> ic{};
     CHECK(ic.total_items() == 0);
 }
 
-TEST_CASE("ItemCollection - An Item can be moved into an ItemCollection", "[ItemCollection]") {
+TEST_CASE("ItemCollection: can be moved into an ItemCollection", "[ItemCollection]") {
     ItemCollection<ItemType::Drug> ic{};
     Item<ItemType::Drug> i{"test_item"};
     ic.add_item(std::move(i));
@@ -22,7 +22,7 @@ TEST_CASE("ItemCollection - An Item can be moved into an ItemCollection", "[Item
     CHECK(stock_count["test_item"] == 1);
 }
 
-TEST_CASE("ItemCollection - An Item in an ItemCollection can be retrieved", "[ItemCollection]") {
+TEST_CASE("ItemCollection: can have an Item retrieved", "[ItemCollection]") {
     ItemCollection<ItemType::Drug> ic{};
     {
         Item<ItemType::Drug> i{"test_item",};
@@ -39,12 +39,12 @@ TEST_CASE("ItemCollection - An Item in an ItemCollection can be retrieved", "[It
     CHECK(stock_count["test_item"] == 0);
 }
 
-TEST_CASE("ItemCollection - An item not in an ItemCollection cannot be retrieved", "[ItemCollection]") {
+TEST_CASE("ItemCollection: cannot retrieve items that don't exist", "[ItemCollection]") {
     ItemCollection<ItemType::Drug> ic{};
     CHECK_THROWS_AS(ic.retrieve_item("test_item"), std::out_of_range);
 }
 
-TEST_CASE("ItemCollection - A retrieved stock count contains all items", "[ItemCollection]") {
+TEST_CASE("ItemCollection: retrieved stock count contains all items", "[ItemCollection]") {
     ItemCollection<ItemType::Drug> ic{};
     auto stock_count_empty{ic.get_stock_count()};
     CHECK(ic.total_items() == 0);

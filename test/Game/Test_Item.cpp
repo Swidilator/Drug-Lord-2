@@ -8,7 +8,7 @@ import Game.Item;
 
 // Test
 
-TEST_CASE("Item - A new Item should have the name and ItemType from arguments", "[Item]") {
+TEST_CASE("Item: should have the name and ItemType from arguments", "[Item]") {
     const Item<ItemType::Drug> i{"test_item"};
 
     CHECK(i.get_name() == "test_item");
@@ -18,7 +18,7 @@ TEST_CASE("Item - A new Item should have the name and ItemType from arguments", 
     CHECK(i.get_price_last_sold_at() == 0);
 }
 
-TEST_CASE("Item - An Item can have it's bought and sold values changed", "[Item]") {
+TEST_CASE("Item: can have it's bought and sold values changed", "[Item]") {
     Item<ItemType::Drug> i{"test_item"};
 
     CHECK(i.get_price_last_bought_at() == 0);
@@ -31,7 +31,7 @@ TEST_CASE("Item - An Item can have it's bought and sold values changed", "[Item]
     CHECK(i.get_price_last_sold_at() == 44);
 }
 
-TEST_CASE("Item - An Item is moved correctly", "[Item]") {
+TEST_CASE("Item: is moved correctly", "[Item]") {
     Item<ItemType::Drug> i{"test_item"};
     i.set_price_last_bought_at(25);
     i.set_price_last_sold_at(44);
@@ -49,7 +49,7 @@ TEST_CASE("Item - An Item is moved correctly", "[Item]") {
     CHECK(i2.get_price_last_sold_at() == 44);
 }
 
-TEST_CASE("Item - An Item cannot have negative bought and sold values", "[Item]") {
+TEST_CASE("Item: cannot have negative bought and sold values", "[Item]") {
     Item<ItemType::Drug> item{"test_item"};
 
     CHECK_THROWS_AS(item.set_price_last_bought_at(-1), std::out_of_range);
