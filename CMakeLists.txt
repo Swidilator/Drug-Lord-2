@@ -8,17 +8,15 @@ add_library(game)
 target_sources(game
         PUBLIC
         FILE_SET CXX_MODULES FILES
-        src/Game/Character.ixx
         src/Game/Game.ixx
         src/Game/World.ixx
         src/Game/Location.ixx
         src/Game/Item.ixx
         src/Game/ItemCollection.ixx
-        #src/Game/ItemCollectionStockCount.ixx
         src/Game/ItemMarket.ixx
-        #src/Game/ItemTransaction.ixx
         src/Game/Wallet.ixx
         src/Game/Inventory.ixx
+        src/Game/Character.ixx
 )
 
 add_executable(Drug_Lord_2 src/main.cxx)
@@ -32,10 +30,9 @@ add_executable(tests
         test/Game/Test_Wallet.cpp
         test/Game/Test_ItemCollection.cpp
         test/Game/Test_Item.cpp
-        #test/Game/Test_ItemTransaction.cpp
         test/Game/Test_Inventory.cpp
         test/Game/Test_ItemMarket.cpp
-        #test/Game/Test_ItemCollectionStockCount.cpp
+        test/Game/Test_Character.cpp
 )
 
 target_include_directories(tests PRIVATE test)
