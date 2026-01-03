@@ -18,6 +18,7 @@ target_sources(game
         src/Game/ItemMarket.ixx
         #src/Game/ItemTransaction.ixx
         src/Game/Wallet.ixx
+        src/Game/Inventory.ixx
 )
 
 add_executable(Drug_Lord_2 src/main.cxx)
@@ -26,11 +27,13 @@ target_link_libraries(Drug_Lord_2 game)
 
 find_package(Catch2 3 REQUIRED)
 # These tests can use the Catch2-provided main
-add_executable(tests test/Game/test.cpp
+add_executable(tests
+        test/Game/test.cpp
         test/Game/Test_Wallet.cpp
         test/Game/Test_ItemCollection.cpp
         test/Game/Test_Item.cpp
         #test/Game/Test_ItemTransaction.cpp
+        test/Game/Test_Inventory.cpp
         test/Game/Test_ItemMarket.cpp
         #test/Game/Test_ItemCollectionStockCount.cpp
 )
