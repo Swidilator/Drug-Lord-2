@@ -4,7 +4,7 @@
 
 #include <unordered_map>
 
-#include "test_setup.h"
+#include "test_setup.hpp"
 
 import Game.Item;
 import Game.ItemMarket;
