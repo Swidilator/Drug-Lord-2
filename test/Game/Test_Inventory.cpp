@@ -9,25 +9,17 @@ import Game.Inventory;
 import Game.Item;
 import Game.ItemCollection;
 
-TEST_CASE("Inventory: offers valid weak_ptr's to underlying ItemCollections", "[Inventory]") {
+TEST_CASE("Inventory: automatically creates and offers valid weak_ptrs of any ItemType", "[Inventory]") {
     Inventory i{};
 
-    auto drugs_ptr{i.get_drugs_ptr().lock()};
-    auto armours_ptr{i.get_armours_ptr().lock()};
-    auto weapons_ptr{i.get_weapons_ptr().lock()};
-    auto ammo_ptr{i.get_ammo_ptr().lock()};
+    auto drugs_ptr{i.get_collection_ptr<ItemType::Drug>()};
 
-    CHECK(drugs_ptr != nullptr);
-    CHECK(armours_ptr != nullptr);
-    CHECK(weapons_ptr != nullptr);
-    CHECK(ammo_ptr != nullptr);
-};
+    CHECK(typeid(drugs_ptr) == typeid(std::weak_ptr<ItemCollection<ItemType::Drug>>));
+    CHECK_NOTHROW(drugs_ptr.lock()->add_item({"test_item"}));
+}
 
 TEST_CASE("Inventory: underlying ItemContainers are empty on creation", "[Inventory]") {
     Inventory i{};
 
-    CHECK(i.get_drugs_ptr().lock()->total_items() == 0);
-    CHECK(i.get_armours_ptr().lock()->total_items() == 0);
-    CHECK(i.get_weapons_ptr().lock()->total_items() == 0);
-    CHECK(i.get_ammo_ptr().lock()->total_items() == 0);
+    CHECK(i.get_collection_ptr<ItemType::Drug>().lock()->total_items() == 0);
 };

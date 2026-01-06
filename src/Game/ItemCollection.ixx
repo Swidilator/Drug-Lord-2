@@ -11,8 +11,13 @@ module;
 export module Game.ItemCollection;
 import Game.Item;
 
+export class ItemCollectionBase {
+public:
+    virtual ~ItemCollectionBase() = default;
+};
+
 export template<ItemType T>
-class ItemCollection {
+class ItemCollection : public ItemCollectionBase {
     std::unordered_map<std::string, std::queue<Item<T> > > item_map_{};
 
 public:
@@ -29,7 +34,7 @@ public:
     auto operator=(ItemCollection&& other) -> ItemCollection& = default;
 
     // Destructor
-    ~ItemCollection() = default;
+    ~ItemCollection() override = default;
 
 
     // Other operations
