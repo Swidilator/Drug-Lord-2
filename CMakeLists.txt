@@ -17,6 +17,7 @@ target_sources(game
         src/Game/Wallet.ixx
         src/Game/Inventory.ixx
         src/Game/Character.ixx
+        src/Game/CharacterRank.ixx
 )
 
 add_executable(Drug_Lord_2 src/main.cxx)
@@ -33,6 +34,7 @@ add_executable(tests
         test/Game/Test_Inventory.cpp
         test/Game/Test_ItemMarket.cpp
         test/Game/Test_Character.cpp
+        test/Game/Test_CharacterRank.cpp
 )
 
 target_include_directories(tests PRIVATE test)
