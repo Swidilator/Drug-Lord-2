@@ -35,7 +35,7 @@ public:
         return money_threshold_;
     }
 
-    [[nodiscard]] std::size_t inventory_size() const {
+    [[nodiscard]] std::size_t drug_inventory_size() const {
         return drug_inventory_size_;
     }
 };
