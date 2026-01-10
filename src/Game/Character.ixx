@@ -16,8 +16,8 @@ import Game.Inventory;
 import Game.CharacterRank;
 
 export class Character {
-    std::shared_ptr<Wallet> cash_{};
-    std::shared_ptr<Wallet> bank_{};
+    Wallet cash_{};
+    Wallet bank_{};
 
     // TODO: Debt will be implemented later
 
@@ -29,9 +29,7 @@ export class Character {
 
 public:
     explicit Character(CharacterRank rank)
-        : cash_{std::make_shared<Wallet>()},
-          bank_{std::make_shared<Wallet>()},
-          rank_{std::move(rank)} {
+        : rank_{std::move(rank)} {
     }
 
     [[nodiscard]]
@@ -65,12 +63,12 @@ public:
     }
 
     [[nodiscard]]
-    auto cash_wallet_ptr() -> std::weak_ptr<Wallet> {
+    auto cash_wallet_ref() -> Wallet& {
         return cash_;
     }
 
     [[nodiscard]]
-    auto bank_wallet_ptr() -> std::weak_ptr<Wallet> {
+    auto bank_wallet_ref() -> Wallet& {
         return bank_;
     }
 

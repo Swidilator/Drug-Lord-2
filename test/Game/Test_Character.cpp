@@ -18,17 +18,20 @@ TEST_CASE("Character: should have 100 health on creation", "[Character]") {
     CHECK(c.health() == 100);
 }
 
-TEST_CASE("Character: wallets can be retrieved", "[Character]") {
+TEST_CASE("Character: wallets can be retrieved and mutated", "[Character]") {
     Character c{{"test_rank", 200000, 50000}};
 
-    CHECK(typeid(c.cash_wallet_ptr()) == typeid(std::weak_ptr<Wallet>));
-    CHECK(typeid(c.bank_wallet_ptr()) == typeid(std::weak_ptr<Wallet>));
+    CHECK(typeid(c.cash_wallet_ref()) == typeid(Wallet&));
+    CHECK(typeid(c.bank_wallet_ref()) == typeid(Wallet&));
 
-    CHECK(c.cash_wallet_ptr().lock() != nullptr);
-    CHECK(c.bank_wallet_ptr().lock() != nullptr);
+    CHECK(c.cash_wallet_ref().balance() == 0);
+    CHECK(c.bank_wallet_ref().balance() == 0);
 
-    CHECK(c.cash_wallet_ptr().lock()->balance() == 0);
-    CHECK(c.bank_wallet_ptr().lock()->balance() == 0);
+    c.cash_wallet_ref().add_funds(20);
+    c.bank_wallet_ref().add_funds(20);
+
+    CHECK(c.cash_wallet_ref().balance() == 20);
+    CHECK(c.bank_wallet_ref().balance() == 20);
 }
 
 TEST_CASE("Character: health can be set only between 0 and 100", "[Character]") {
