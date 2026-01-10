@@ -56,12 +56,7 @@ public:
         return item_collection_.total_items();
     }
 
-    auto sell_items(ItemCollection<T>&& offered_items, const std::weak_ptr<Wallet>& wallet) -> void {
-        const auto wallet_p = wallet.lock();
-        if (!wallet_p) {
-            throw std::logic_error("Wallet weak_ptr invalid.");
-        }
-
+    auto sell_items(ItemCollection<T>&& offered_items, Wallet& wallet) -> void {
         long long int total_price{};
         for (const auto& [item_name, num_items]: offered_items.stock_count()) {
             if (!item_prices_.contains(item_name)) {
@@ -71,7 +66,7 @@ public:
             total_price += num_items * item_prices_[item_name];
         }
 
-        wallet_p->add_funds(total_price);
+        wallet.add_funds(total_price);
 
         for (const auto& [item_name, num_items]: offered_items.stock_count()) {
             for (int i{}; i < num_items; i++) {
@@ -82,12 +77,7 @@ public:
 
     [[nodiscard]]
     auto buy_items(const std::unordered_map<std::string, int>& requested_items,
-                   const std::weak_ptr<Wallet>& wallet) -> ItemCollection<T> {
-        const auto wallet_p = wallet.lock();
-        if (!wallet_p) {
-            throw std::logic_error("Wallet weak_ptr invalid.");
-        }
-
+                   Wallet& wallet) -> ItemCollection<T> {
         long long int total_price{};
         auto current_stock = item_collection_.stock_count();
 
@@ -103,13 +93,13 @@ public:
             total_price += num_items * item_prices_[item_name];
         }
 
-        if (total_price > wallet_p->balance()) {
+        if (total_price > wallet.balance()) {
             throw std::range_error("Not enough money in wallet.");
         }
 
         ItemCollection<T> output_ic{};
 
-        wallet_p->remove_funds(total_price);
+        wallet.remove_funds(total_price);
 
         for (const auto& item_name: requested_items | std::views::keys) {
             output_ic.add_item(item_collection_.retrieve_item(item_name));

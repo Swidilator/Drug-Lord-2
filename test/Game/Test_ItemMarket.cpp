@@ -28,7 +28,7 @@ auto setup_item_market() -> ItemMarket<T> {
 }
 
 TEST_CASE("ItemMarket: can be bought from", "[ItemMarket]") {
-    auto wallet = std::make_shared<Wallet>(200);
+    auto wallet = Wallet{200};
     auto market = setup_item_market<ItemType::Drug>();
 
     // Buy - Does work
@@ -36,7 +36,7 @@ TEST_CASE("ItemMarket: can be bought from", "[ItemMarket]") {
         {{"test_item_1", 1}},
         wallet
     );
-    CHECK(wallet->balance() == 195);
+    CHECK(wallet.balance() == 195);
     CHECK(purchase_ic.total_items() == 1);
     CHECK(purchase_ic.stock_count()["test_item_1"] == 1);
     CHECK(market.total_items() == 1);
@@ -44,7 +44,7 @@ TEST_CASE("ItemMarket: can be bought from", "[ItemMarket]") {
 };
 
 TEST_CASE("ItemMarket: can be sold to", "[ItemMarket]") {
-    auto wallet = std::make_shared<Wallet>(200);
+    auto wallet = Wallet{200};
     auto market = setup_item_market<ItemType::Drug>();
 
     // Sell - Does work
@@ -56,12 +56,12 @@ TEST_CASE("ItemMarket: can be sold to", "[ItemMarket]") {
             wallet
         );
     }
-    CHECK(wallet->balance() == 205);
+    CHECK(wallet.balance() == 205);
     CHECK(market.stock_count().at("test_item_1") == 2);
 };
 
 TEST_CASE("ItemMarket: only allows buying items that have a price", "[ItemMarket]") {
-    auto wallet = std::make_shared<Wallet>(200);
+    auto wallet = Wallet{200};
     auto market = setup_item_market<ItemType::Drug>();
 
     // Buy - Does not work
@@ -69,11 +69,11 @@ TEST_CASE("ItemMarket: only allows buying items that have a price", "[ItemMarket
                         {{"test_item_3", 1}},
                         wallet
                     ), std::domain_error);
-    CHECK(wallet->balance() == 200);
+    CHECK(wallet.balance() == 200);
 };
 
 TEST_CASE("ItemMarket: allows only selling items that have a price", "[ItemMarket]") {
-    auto wallet = std::make_shared<Wallet>(200);
+    auto wallet = Wallet{200};
     auto market = setup_item_market<ItemType::Drug>();
 
     // Sell - Does not work
@@ -89,7 +89,7 @@ TEST_CASE("ItemMarket: allows only selling items that have a price", "[ItemMarke
 };
 
 TEST_CASE("ItemMarket: can accept multiple items of different names when buying", "[ItemMarket]") {
-    auto wallet = std::make_shared<Wallet>(200);
+    auto wallet = Wallet{200};
     auto market = setup_item_market<ItemType::Drug>();
 
     auto purchase_ic = market.buy_items(
@@ -101,14 +101,14 @@ TEST_CASE("ItemMarket: can accept multiple items of different names when buying"
     CHECK(purchase_ic.stock_count()["test_item_1"] == 1);
     CHECK(purchase_ic.stock_count()["test_item_2"] == 1);
 
-    CHECK(wallet->balance() == 191);
+    CHECK(wallet.balance() == 191);
 
     CHECK(market.stock_count()["test_item_1"] == 0);
     CHECK(market.stock_count()["test_item_2"] == 0);
 };
 
 TEST_CASE("ItemMarket: can accept multiple items of different names when selling", "[ItemMarket]") {
-    auto wallet = std::make_shared<Wallet>(200);
+    auto wallet = Wallet{200};
     auto market = setup_item_market<ItemType::Drug>(); {
         ItemCollection<ItemType::Drug> ic{};
         ic.add_item({"test_item_1"});
@@ -123,7 +123,7 @@ TEST_CASE("ItemMarket: can accept multiple items of different names when selling
     CHECK(sc["test_item_1"] == 3);
     CHECK(sc["test_item_2"] == 2);
 
-    CHECK(wallet->balance() == 214);
+    CHECK(wallet.balance() == 214);
 };
 
 TEST_CASE("ItemMarket: total_items() shows the number of items in the underlying ItemCollection", "[ItemMarket]") {
@@ -133,7 +133,7 @@ TEST_CASE("ItemMarket: total_items() shows the number of items in the underlying
 };
 
 TEST_CASE("ItemMarket: get_stock_count() has entries for each price even when stock is empty", "[ItemMarket]") {
-    auto wallet = std::make_shared<Wallet>(200);
+    auto wallet = Wallet{200};
     auto market = setup_item_market<ItemType::Drug>();
 
     CHECK(market.total_items() == 2);
@@ -151,27 +151,15 @@ TEST_CASE("ItemMarket: offers const references of underlying resources", "[ItemM
     CHECK(market.item_collection().total_items() == 2);
 }
 
-TEST_CASE("ItemMarket: throws when wallet pointer is invalid when buying and selling", "[ItemMarket]") {
-    auto wallet = std::make_shared<Wallet>(200);
-    wallet.reset();
-    auto market = setup_item_market<ItemType::Drug>();
-
-    CHECK_THROWS_AS(market.buy_items({{"test_item_1", 1}}, wallet), std::logic_error);
-
-    ItemCollection<ItemType::Drug> ic{};
-    ic.add_item({"test_item_1"});
-    CHECK_THROWS_AS(market.sell_items(std::move(ic), wallet), std::logic_error);
-}
-
 TEST_CASE("ItemMarket: throws when wallet has insufficient funds when buying", "[ItemMarket]") {
-    auto wallet = std::make_shared<Wallet>(4);
+    auto wallet = Wallet{4};
     auto market = setup_item_market<ItemType::Drug>();
 
     CHECK_THROWS_AS(market.buy_items({{"test_item_1", 1}}, wallet), std::range_error);
 }
 
 TEST_CASE("ItemMarket: throws when insufficient items when buying", "[ItemMarket]") {
-    auto wallet = std::make_shared<Wallet>(200);
+    auto wallet = Wallet{200};
     auto market = setup_item_market<ItemType::Drug>();
 
     CHECK_THROWS_AS(market.buy_items({{"test_item_1", 2}}, wallet), std::range_error);
