@@ -51,9 +51,9 @@ public:
         int max_armour_value{};
 
         for (
-            const auto armour_collection{inventory_.get_collection_ptr<ItemType::Armour>().lock()}
+            const auto armour_collection{inventory_.collection_ptr<ItemType::Armour>().lock()}
             ; const auto& [armour_name, armour_value]
-            : armour_collection->get_stock_count()) {
+            : armour_collection->stock_count()) {
             if (armour_values.contains(armour_name)) {
                 max_armour_value = std::max(max_armour_value, armour_values.at(armour_name));
             } else {
@@ -86,6 +86,6 @@ public:
     template<ItemType T>
     [[nodiscard]]
     auto inv_collection_ptr() -> std::weak_ptr<ItemCollection<T> > {
-        return inventory_.get_collection_ptr<T>();
+        return inventory_.collection_ptr<T>();
     }
 };

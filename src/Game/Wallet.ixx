@@ -18,13 +18,14 @@ public:
         }
     }
 
-    [[nodiscard]] auto get_balance() const -> long long int {
+    [[nodiscard]]
+    auto balance() const -> long long int {
         return balance_;
     }
 
     auto add_funds(const long long int value) -> long long int {
         balance_ += value;
-        return get_balance();
+        return balance();
     }
 
     auto remove_funds(const long long int value) -> long long int {
@@ -33,6 +34,6 @@ public:
         }
 
         balance_ -= value;
-        return get_balance();
+        return balance();
     }
 };

@@ -39,11 +39,11 @@ public:
 
     // Other operations
     auto add_item(Item<T>&& item) -> void {
-        if (!item_map_.contains(item.get_name())) {
-            item_map_[item.get_name()] = {};
+        if (!item_map_.contains(item.name())) {
+            item_map_[item.name()] = {};
         }
 
-        item_map_[item.get_name()].push(std::move(item));
+        item_map_[item.name()].push(std::move(item));
     }
 
     auto retrieve_item(const std::string& item_name) -> Item<T> {
@@ -60,7 +60,8 @@ public:
         return return_item;
     }
 
-    [[nodiscard]] auto get_stock_count() const -> std::unordered_map<std::string, std::size_t> {
+    [[nodiscard]]
+    auto stock_count() const -> std::unordered_map<std::string, std::size_t> {
         std::unordered_map<std::string, std::size_t> out;
 
         for (const auto& [key, value]: item_map_) {
@@ -70,8 +71,9 @@ public:
         return out;
     }
 
-    [[nodiscard]] auto total_items() const -> std::size_t {
-        auto non_zero_view = get_stock_count()
+    [[nodiscard]]
+    auto total_items() const -> std::size_t {
+        auto non_zero_view = stock_count()
                              | std::views::transform([](const auto& e) { return e.second; })
                              | std::views::filter([](const auto& e) {
                                  return e != 0;

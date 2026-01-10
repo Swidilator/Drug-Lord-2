@@ -17,7 +17,7 @@ export class Inventory {
 public:
     template<ItemType T>
     [[nodiscard]]
-    auto get_collection_ptr() -> std::weak_ptr<ItemCollection<T> > {
+    auto collection_ptr() -> std::weak_ptr<ItemCollection<T> > {
         if (!collection_map_.contains(T)) {
             collection_map_[T] = std::make_shared<ItemCollection<T> >();
         }

@@ -50,19 +50,23 @@ public:
 
     ~Item() = default;
 
-    [[nodiscard]] auto get_name() const -> const std::string& {
+    [[nodiscard]]
+    auto name() const -> const std::string& {
         return name_;
     }
 
-    [[nodiscard]] auto get_item_type() const -> const ItemType& {
+    [[nodiscard]]
+    auto item_type() const -> const ItemType& {
         return item_type_;
     }
 
-    [[nodiscard]] auto get_price_last_bought_at() const -> int {
+    [[nodiscard]]
+    auto price_last_bought_at() const -> int {
         return price_last_bought_at_;
     }
 
-    [[nodiscard]] auto get_price_last_sold_at() const -> int {
+    [[nodiscard]]
+    auto price_last_sold_at() const -> int {
         return price_last_sold_at_;
     }
 

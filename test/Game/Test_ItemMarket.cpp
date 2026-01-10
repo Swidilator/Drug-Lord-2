@@ -36,11 +36,11 @@ TEST_CASE("ItemMarket: can be bought from", "[ItemMarket]") {
         {{"test_item_1", 1}},
         wallet
     );
-    CHECK(wallet->get_balance() == 195);
+    CHECK(wallet->balance() == 195);
     CHECK(purchase_ic.total_items() == 1);
-    CHECK(purchase_ic.get_stock_count()["test_item_1"] == 1);
+    CHECK(purchase_ic.stock_count()["test_item_1"] == 1);
     CHECK(market.total_items() == 1);
-    CHECK(market.get_stock_count()["test_item_1"] == 0);
+    CHECK(market.stock_count()["test_item_1"] == 0);
 };
 
 TEST_CASE("ItemMarket: can be sold to", "[ItemMarket]") {
@@ -56,8 +56,8 @@ TEST_CASE("ItemMarket: can be sold to", "[ItemMarket]") {
             wallet
         );
     }
-    CHECK(wallet->get_balance() == 205);
-    CHECK(market.get_stock_count().at("test_item_1") == 2);
+    CHECK(wallet->balance() == 205);
+    CHECK(market.stock_count().at("test_item_1") == 2);
 };
 
 TEST_CASE("ItemMarket: only allows buying items that have a price", "[ItemMarket]") {
@@ -69,7 +69,7 @@ TEST_CASE("ItemMarket: only allows buying items that have a price", "[ItemMarket
                         {{"test_item_3", 1}},
                         wallet
                     ), std::domain_error);
-    CHECK(wallet->get_balance() == 200);
+    CHECK(wallet->balance() == 200);
 };
 
 TEST_CASE("ItemMarket: allows only selling items that have a price", "[ItemMarket]") {
@@ -98,13 +98,13 @@ TEST_CASE("ItemMarket: can accept multiple items of different names when buying"
     );
 
     CHECK(purchase_ic.total_items() == 2);
-    CHECK(purchase_ic.get_stock_count()["test_item_1"] == 1);
-    CHECK(purchase_ic.get_stock_count()["test_item_2"] == 1);
+    CHECK(purchase_ic.stock_count()["test_item_1"] == 1);
+    CHECK(purchase_ic.stock_count()["test_item_2"] == 1);
 
-    CHECK(wallet->get_balance() == 191);
+    CHECK(wallet->balance() == 191);
 
-    CHECK(market.get_stock_count()["test_item_1"] == 0);
-    CHECK(market.get_stock_count()["test_item_2"] == 0);
+    CHECK(market.stock_count()["test_item_1"] == 0);
+    CHECK(market.stock_count()["test_item_2"] == 0);
 };
 
 TEST_CASE("ItemMarket: can accept multiple items of different names when selling", "[ItemMarket]") {
@@ -119,11 +119,11 @@ TEST_CASE("ItemMarket: can accept multiple items of different names when selling
     }
 
     CHECK(market.total_items() == 5);
-    auto sc{market.get_stock_count()};
+    auto sc{market.stock_count()};
     CHECK(sc["test_item_1"] == 3);
     CHECK(sc["test_item_2"] == 2);
 
-    CHECK(wallet->get_balance() == 214);
+    CHECK(wallet->balance() == 214);
 };
 
 TEST_CASE("ItemMarket: total_items() shows the number of items in the underlying ItemCollection", "[ItemMarket]") {
@@ -140,15 +140,15 @@ TEST_CASE("ItemMarket: get_stock_count() has entries for each price even when st
 
     auto out = market.buy_items({{"test_item_1", 1}}, wallet);
 
-    CHECK(market.get_stock_count().contains("test_item_1") == true);
-    CHECK(market.get_stock_count().at("test_item_1") == 0);
+    CHECK(market.stock_count().contains("test_item_1") == true);
+    CHECK(market.stock_count().at("test_item_1") == 0);
 };
 
 TEST_CASE("ItemMarket: offers const references of underlying resources", "[ItemMarket]") {
     auto market = setup_item_market<ItemType::Drug>();
 
-    CHECK(market.get_prices().at("test_item_1") == 5);
-    CHECK(market.get_collection().total_items() == 2);
+    CHECK(market.prices().at("test_item_1") == 5);
+    CHECK(market.item_collection().total_items() == 2);
 }
 
 TEST_CASE("ItemMarket: throws when wallet pointer is invalid when buying and selling", "[ItemMarket]") {

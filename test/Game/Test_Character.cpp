@@ -27,8 +27,8 @@ TEST_CASE("Character: wallets can be retrieved", "[Character]") {
     CHECK(c.cash_wallet_ptr().lock() != nullptr);
     CHECK(c.bank_wallet_ptr().lock() != nullptr);
 
-    CHECK(c.cash_wallet_ptr().lock()->get_balance() == 0);
-    CHECK(c.bank_wallet_ptr().lock()->get_balance() == 0);
+    CHECK(c.cash_wallet_ptr().lock()->balance() == 0);
+    CHECK(c.bank_wallet_ptr().lock()->balance() == 0);
 }
 
 TEST_CASE("Character: health can be set only between 0 and 100", "[Character]") {

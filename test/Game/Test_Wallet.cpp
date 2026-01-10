@@ -8,7 +8,7 @@ import Game.Wallet;
 
 TEST_CASE("Wallet: is empty with the default constructor", "[Wallet]") {
     constexpr Wallet w{};
-    CHECK(w.get_balance() == 0);
+    CHECK(w.balance() == 0);
 }
 
 TEST_CASE("Wallet: cannot be created with a negative balance", "[Wallet]") {
@@ -17,7 +17,7 @@ TEST_CASE("Wallet: cannot be created with a negative balance", "[Wallet]") {
 
 TEST_CASE("Wallet: has funds matching the constructor argument value", "[Wallet]") {
     const Wallet w{25};
-    CHECK(w.get_balance() == 25);
+    CHECK(w.balance() == 25);
 }
 
 TEST_CASE("Wallet: can have funds added", "[Wallet]") {
@@ -35,5 +35,5 @@ TEST_CASE("Wallet: can have funds removed if it contains enough funds", "[Wallet
 TEST_CASE("Wallet: can't have more funds removed than it contains", "[Wallet]") {
     Wallet w{25};
     CHECK_THROWS_AS(w.remove_funds(27), std::out_of_range);
-    CHECK(w.get_balance() == 25);
+    CHECK(w.balance() == 25);
 }

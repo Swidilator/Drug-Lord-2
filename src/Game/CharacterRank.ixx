@@ -27,15 +27,18 @@ public:
         }
     }
 
-    [[nodiscard]] const std::string& title() const {
+    [[nodiscard]]
+    auto title() const -> const std::string& {
         return title_;
     }
 
-    [[nodiscard]] long long int money_threshold() const {
+    [[nodiscard]]
+    auto money_threshold() const -> long long int {
         return money_threshold_;
     }
 
-    [[nodiscard]] std::size_t drug_inventory_size() const {
+    [[nodiscard]]
+    auto drug_inventory_size() const -> std::size_t {
         return drug_inventory_size_;
     }
 };
