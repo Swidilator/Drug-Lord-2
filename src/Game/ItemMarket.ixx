@@ -22,7 +22,7 @@ export using ItemPrices = std::unordered_map<std::string, int>;
 export template <ItemType T>
 class ItemMarket {
     ItemCollection<T> item_collection_{};
-    std::unordered_map<std::string, int> item_prices_{};
+    ItemPrices item_prices_{};
 
 public:
     ItemMarket(ItemCollection<T>&& item_collection, ItemPrices item_prices)
