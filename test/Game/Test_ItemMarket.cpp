@@ -11,7 +11,7 @@ import Game.ItemMarket;
 import Game.ItemCollection;
 import Game.Wallet;
 
-template<ItemType T>
+template <ItemType T>
 auto setup_item_market() -> ItemMarket<T> {
     std::unordered_map<std::string, int> item_prices{
         {"test_item_1", 5},
@@ -23,6 +23,7 @@ auto setup_item_market() -> ItemMarket<T> {
     // Add test items
     ic.add_item({"test_item_1"});
     ic.add_item({"test_item_2"});
+    ic.add_item({"test_item_3"});
 
     return {std::move(ic), item_prices};
 }
@@ -109,7 +110,8 @@ TEST_CASE("ItemMarket: can accept multiple items of different names when buying"
 
 TEST_CASE("ItemMarket: can accept multiple items of different names when selling", "[ItemMarket]") {
     auto wallet = Wallet{200};
-    auto market = setup_item_market<ItemType::Drug>(); {
+    auto market = setup_item_market<ItemType::Drug>();
+    {
         ItemCollection<ItemType::Drug> ic{};
         ic.add_item({"test_item_1"});
         ic.add_item({"test_item_1"});
@@ -126,13 +128,13 @@ TEST_CASE("ItemMarket: can accept multiple items of different names when selling
     CHECK(wallet.balance() == 214);
 };
 
-TEST_CASE("ItemMarket: total_items() shows the number of items in the underlying ItemCollection", "[ItemMarket]") {
+TEST_CASE("ItemMarket: total_items() shows the number of items in the underlying ItemCollection that have a price", "[ItemMarket]") {
     auto market = setup_item_market<ItemType::Drug>();
 
     CHECK(market.total_items() == 2);
 };
 
-TEST_CASE("ItemMarket: get_stock_count() has entries for each price even when stock is empty", "[ItemMarket]") {
+TEST_CASE("ItemMarket: get_stock_count() has entries for all valid priced entries even when stock is empty", "[ItemMarket]") {
     auto wallet = Wallet{200};
     auto market = setup_item_market<ItemType::Drug>();
 
@@ -148,7 +150,7 @@ TEST_CASE("ItemMarket: offers const references of underlying resources", "[ItemM
     auto market = setup_item_market<ItemType::Drug>();
 
     CHECK(market.prices().at("test_item_1") == 5);
-    CHECK(market.item_collection().total_items() == 2);
+    CHECK(market.item_collection().total_items() == 3);
 }
 
 TEST_CASE("ItemMarket: throws when wallet has insufficient funds when buying", "[ItemMarket]") {
@@ -163,23 +165,4 @@ TEST_CASE("ItemMarket: throws when insufficient items when buying", "[ItemMarket
     auto market = setup_item_market<ItemType::Drug>();
 
     CHECK_THROWS_AS(market.buy_items({{"test_item_1", 2}}, wallet), std::range_error);
-}
-
-TEST_CASE("ItemMarket: throws when non-priced items are present on creation", "[ItemMarket]") {
-    std::unordered_map<std::string, int> item_prices{
-        {"test_item_1", 5}
-    };
-
-    ItemCollection<ItemType::Drug> ic{};
-
-    // Add test items
-    ic.add_item({"test_item_2"});
-
-    try {
-        ItemMarket a{std::move(ic), item_prices};
-    } catch (const std::domain_error&) {
-        CHECK(true);
-    } catch (...) {
-        CHECK(false);
-    }
 }
