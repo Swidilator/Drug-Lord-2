@@ -15,13 +15,15 @@ import Game.Item;
 import Game.ItemCollection;
 import Game.Wallet;
 
+export using ItemPrices = std::unordered_map<std::string, int>;
+
 export template<ItemType T>
 class ItemMarket {
     ItemCollection<T> item_collection_{};
     std::unordered_map<std::string, int> item_prices_{};
 
 public:
-    ItemMarket(ItemCollection<T>&& item_collection, std::unordered_map<std::string, int> item_prices)
+    ItemMarket(ItemCollection<T>&& item_collection, ItemPrices item_prices)
         : item_collection_{std::move(item_collection)}, item_prices_{std::move(item_prices)} {
         for (const auto& [item_name, num_item]: item_collection_.stock_count()) {
             if (!item_prices_.contains(item_name)) {
@@ -34,12 +36,12 @@ public:
         return item_collection_;
     }
 
-    auto prices() const -> const std::unordered_map<std::string, int>& {
+    auto prices() const -> const ItemPrices& {
         return item_prices_;
     }
 
     [[nodiscard]]
-    auto stock_count() const -> std::unordered_map<std::string, std::size_t> {
+    auto stock_count() const -> ItemStockCount {
         auto out = item_collection_.stock_count();
 
         for (const auto& item_name: item_prices_ | std::views::keys) {

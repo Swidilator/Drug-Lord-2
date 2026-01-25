@@ -11,14 +11,18 @@ module;
 export module Game.ItemCollection;
 import Game.Item;
 
+export using ItemStockCount = std::unordered_map<std::string, std::size_t>;
+
+
 export class ItemCollectionBase {
 public:
     virtual ~ItemCollectionBase() = default;
 };
 
-export template<ItemType T>
+
+export template <ItemType T>
 class ItemCollection : public ItemCollectionBase {
-    std::unordered_map<std::string, std::queue<Item<T> > > item_map_{};
+    std::unordered_map<std::string, std::queue<Item<T>>> item_map_{};
 
 public:
     ItemCollection() = default;
@@ -36,7 +40,6 @@ public:
     // Destructor
     ~ItemCollection() override = default;
 
-
     // Other operations
     auto add_item(Item<T>&& item) -> void {
         if (!item_map_.contains(item.name())) {
@@ -48,7 +51,8 @@ public:
 
     auto retrieve_item(const std::string& item_name) -> Item<T> {
         if (!item_map_.contains(item_name) or item_map_[item_name].empty()) {
-            throw std::out_of_range(std::format("No more {} in ItemCollection", item_name));
+            throw std::out_of_range(
+                std::format("No more {} in ItemCollection", item_name));
         }
         auto return_item = std::move(item_map_[item_name].front());
         item_map_[item_name].pop();
@@ -61,10 +65,10 @@ public:
     }
 
     [[nodiscard]]
-    auto stock_count() const -> std::unordered_map<std::string, std::size_t> {
+    auto stock_count() const -> ItemStockCount {
         std::unordered_map<std::string, std::size_t> out;
 
-        for (const auto& [key, value]: item_map_) {
+        for (const auto& [key, value] : item_map_) {
             out[key] = value.size();
         }
 
@@ -73,11 +77,14 @@ public:
 
     [[nodiscard]]
     auto total_items() const -> std::size_t {
-        auto non_zero_view = stock_count()
-                             | std::views::transform([](const auto& e) { return e.second; })
-                             | std::views::filter([](const auto& e) {
-                                 return e != 0;
-                             });
+        auto non_zero_view =
+            stock_count() |
+            std::views::transform([](const auto& e) {
+                return e.second;
+            }) |
+            std::views::filter([](const auto& e) {
+                return e != 0;
+            });
 
         return std::ranges::fold_left(non_zero_view, 0, std::plus{});
     }
