@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(Drug_Lord_2)
+project(Drug_Lord_2 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 
