@@ -166,3 +166,15 @@ TEST_CASE("ItemMarket: throws when insufficient items when buying", "[ItemMarket
 
     CHECK_THROWS_AS(market.buy_items({{"test_item_1", 2}}, wallet), std::range_error);
 }
+
+TEST_CASE("ItemMarket: allows items to be directly added to and removed from underlying item collection",
+          "[ItemMarket]") {
+    auto market = setup_item_market<ItemType::Drug>();
+
+    CHECK(market.item_collection().stock_count().at("test_item_1") == 1);
+    market.add_item({"test_item_1"});
+    CHECK(market.item_collection().stock_count().at("test_item_1") == 2);
+
+    auto i{market.retrieve_item("test_item_1")};
+    CHECK(market.item_collection().stock_count().at("test_item_1") == 1);
+}

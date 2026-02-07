@@ -61,6 +61,14 @@ public:
         return std::ranges::fold_left(stock_count() | std::views::values, 0, std::plus{});
     }
 
+    auto add_item(Item<T>&& item) {
+        item_collection_.add_item(std::move(item));
+    }
+
+    auto retrieve_item(const std::string& item_name) -> Item<T> {
+        return item_collection_.retrieve_item(item_name);
+    }
+
     auto sell_items(ItemCollection<T>&& offered_items, Wallet& wallet) -> void {
         long long int total_price{};
         for (const auto& [item_name, num_items] : offered_items.stock_count()) {
