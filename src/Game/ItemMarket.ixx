@@ -125,3 +125,32 @@ public:
         return output_ic;
     }
 };
+
+
+export template <ItemType T>
+auto update_item_market(ItemMarket<T>& item_market, const ItemPrices& new_item_prices,
+                        const ItemStockCount& new_item_stock_count) {
+    item_market.set_prices(new_item_prices);
+
+
+    ItemStockCount current_item_stock_count{item_market.item_collection().stock_count()};
+
+    for (const auto& [item_name, target_value] : new_item_stock_count) {
+        std::size_t current_value{};
+        if (current_item_stock_count.contains(item_name)) {
+            current_value = current_item_stock_count.at(item_name);
+        }
+
+        if (current_value < target_value) {
+            for (std::size_t j{}; j < (target_value - current_value); j++) {
+                item_market.add_item(item_name);
+            }
+        }
+
+        if (current_value > target_value) {
+            for (std::size_t j{}; j < (current_value - target_value); j++) {
+                item_market.retrieve_item(item_name);
+            }
+        }
+    }
+}

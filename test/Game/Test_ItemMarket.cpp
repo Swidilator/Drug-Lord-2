@@ -194,3 +194,38 @@ TEST_CASE("ItemMarket: allows replacing the ItemPrices member", "[ItemMarket]") 
     CHECK(market.prices().at("test_item_3") == 8);
     CHECK(market.prices().size() == 3);
 }
+
+TEST_CASE("update_item_market: correctly changes ItemMarket to match parameters", "[ItemMarket]") {
+    auto market = setup_item_market<ItemType::Drug>();
+
+    ItemPrices proposed_item_prices{
+        {
+            {"test_item_1", 6},
+            {"test_item_2", 4},
+            {"test_item_3", 8}
+        }
+    };
+
+    ItemStockCount proposed_item_stock_count{
+        {
+            {"test_item_1", 7},
+            {"test_item_2", 4},
+            {"test_item_3", 0}
+        }
+    };
+
+    update_item_market(market, proposed_item_prices, proposed_item_stock_count);
+
+    ItemPrices updated_item_prices{market.prices()};
+    ItemStockCount updated_item_stock_count{market.stock_count()};
+
+    CHECK(updated_item_prices.size() == 3);
+    CHECK(updated_item_prices.at("test_item_1") == 6);
+    CHECK(updated_item_prices.at("test_item_2") == 4);
+    CHECK(updated_item_prices.at("test_item_3") == 8);
+
+    CHECK(updated_item_stock_count.size() == 3);
+    CHECK(updated_item_stock_count.at("test_item_1") == 7);
+    CHECK(updated_item_stock_count.at("test_item_2") == 4);
+    CHECK(updated_item_stock_count.at("test_item_3") == 0);
+}
