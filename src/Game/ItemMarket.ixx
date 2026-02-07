@@ -36,6 +36,10 @@ public:
         return item_prices_;
     }
 
+    auto set_prices(const ItemPrices& item_prices) -> void {
+        item_prices_ = item_prices;
+    }
+
     [[nodiscard]]
     auto stock_count() const -> ItemStockCount {
         auto out = item_collection_.stock_count();

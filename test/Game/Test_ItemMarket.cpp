@@ -178,3 +178,19 @@ TEST_CASE("ItemMarket: allows items to be directly added to and removed from und
     auto i{market.retrieve_item("test_item_1")};
     CHECK(market.item_collection().stock_count().at("test_item_1") == 1);
 }
+
+TEST_CASE("ItemMarket: allows replacing the ItemPrices member", "[ItemMarket]") {
+    auto market = setup_item_market<ItemType::Drug>();
+    CHECK(market.prices().at("test_item_1") == 5);
+    CHECK(market.prices().size() == 2);
+
+    market.set_prices({
+        {"test_item_1", 6},
+        {"test_item_2", 4},
+        {"test_item_3", 8}
+    });
+
+    CHECK(market.prices().at("test_item_1") == 6);
+    CHECK(market.prices().at("test_item_3") == 8);
+    CHECK(market.prices().size() == 3);
+}
