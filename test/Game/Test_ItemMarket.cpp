@@ -13,7 +13,7 @@ import Game.Wallet;
 
 template <ItemType T>
 auto setup_item_market() -> ItemMarket<T> {
-    std::unordered_map<std::string, int> item_prices{
+    ItemPrices item_prices{
         {"test_item_1", 5},
         {"test_item_2", 4}
     };
@@ -128,13 +128,15 @@ TEST_CASE("ItemMarket: can accept multiple items of different names when selling
     CHECK(wallet.balance() == 214);
 };
 
-TEST_CASE("ItemMarket: total_items() shows the number of items in the underlying ItemCollection that have a price", "[ItemMarket]") {
+TEST_CASE("ItemMarket: total_items() shows the number of items in the underlying ItemCollection that have a price",
+          "[ItemMarket]") {
     auto market = setup_item_market<ItemType::Drug>();
 
     CHECK(market.total_items() == 2);
 };
 
-TEST_CASE("ItemMarket: get_stock_count() has entries for all valid priced entries even when stock is empty", "[ItemMarket]") {
+TEST_CASE("ItemMarket: get_stock_count() has entries for all valid priced entries even when stock is empty",
+          "[ItemMarket]") {
     auto wallet = Wallet{200};
     auto market = setup_item_market<ItemType::Drug>();
 
