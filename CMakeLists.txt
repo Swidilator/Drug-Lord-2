@@ -34,6 +34,7 @@ add_executable(tests
         test/Game/Test_ItemMarket.cpp
         test/Game/Test_Character.cpp
         test/Game/Test_CharacterRank.cpp
+        test/Game/Test_Location.cpp
 )
 
 target_include_directories(tests PRIVATE test)
