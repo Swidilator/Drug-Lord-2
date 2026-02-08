@@ -93,8 +93,7 @@ public:
     }
 
     [[nodiscard]]
-    auto buy_items(const std::unordered_map<std::string, int>& requested_items,
-                   Wallet& wallet) -> ItemCollection<T> {
+    auto buy_items(const ItemStockCount& requested_items, Wallet& wallet) -> ItemCollection<T> {
         long long int total_price{};
         auto current_stock = item_collection_.stock_count();
 
@@ -118,8 +117,10 @@ public:
 
         wallet.remove_funds(total_price);
 
-        for (const auto& item_name : requested_items | std::views::keys) {
-            output_ic.add_item(item_collection_.retrieve_item(item_name));
+        for (const auto& [item_name, num_items] : requested_items) {
+            for (int i{0}; i < num_items; i++) {
+                output_ic.add_item(item_collection_.retrieve_item(item_name));
+            }
         }
 
         return output_ic;

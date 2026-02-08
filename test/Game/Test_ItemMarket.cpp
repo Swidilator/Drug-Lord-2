@@ -31,17 +31,21 @@ auto setup_item_market() -> ItemMarket<T> {
 TEST_CASE("ItemMarket: can be bought from", "[ItemMarket]") {
     auto wallet = Wallet{200};
     auto market = setup_item_market<ItemType::Drug>();
+    market.add_item({"test_item_2"});
 
     // Buy - Does work
     auto purchase_ic = market.buy_items(
-        {{"test_item_1", 1}},
+        {{"test_item_1", 1},
+        {"test_item_2", 2}},
         wallet
     );
-    CHECK(wallet.balance() == 195);
-    CHECK(purchase_ic.total_items() == 1);
+    CHECK(wallet.balance() == 187);
+    CHECK(purchase_ic.total_items() == 3);
     CHECK(purchase_ic.stock_count()["test_item_1"] == 1);
-    CHECK(market.total_items() == 1);
+    CHECK(purchase_ic.stock_count()["test_item_2"] == 2);
+    CHECK(market.total_items() == 0);
     CHECK(market.stock_count()["test_item_1"] == 0);
+    CHECK(market.stock_count()["test_item_2"] == 0);
 };
 
 TEST_CASE("ItemMarket: can be sold to", "[ItemMarket]") {
