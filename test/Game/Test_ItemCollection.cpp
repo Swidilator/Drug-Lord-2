@@ -60,3 +60,21 @@ TEST_CASE("ItemCollection: retrieved stock count contains all items", "[ItemColl
     CHECK(stock_count_full["test_item_1"] == 1);
     CHECK(stock_count_full["test_item_2"] == 2);
 }
+
+TEST_CASE("ItemCollection: can take all items out of another ItemCollection", "[ItemCollection]") {
+    ItemCollection<ItemType::Drug> ic{};
+    ItemCollection<ItemType::Drug> ic_other{};
+
+    ic_other.add_item({"test_item_1"});
+    ic_other.add_item({"test_item_2"});
+
+    ic.take_all(ic_other);
+
+    CHECK(ic.stock_count().size() == 2);
+    CHECK(ic.stock_count()["test_item_1"] == 1);
+    CHECK(ic.stock_count()["test_item_2"] == 1);
+
+    CHECK(ic_other.stock_count().size() == 0);
+    CHECK(ic_other.stock_count()["test_item_1"] == 0);
+    CHECK(ic_other.stock_count()["test_item_2"] == 0);
+}

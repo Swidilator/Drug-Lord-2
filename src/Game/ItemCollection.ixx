@@ -64,6 +64,18 @@ public:
         return return_item;
     }
 
+    auto take_all(ItemCollection& other) -> void {
+        if (&other == this) {
+            return;
+        }
+
+        for (auto other_stock_count{other.stock_count()}; const auto& [item_name, item_count] : other_stock_count) {
+            for (size_t i{0}; i < item_count; i++) {
+                add_item(other.retrieve_item(item_name));
+            }
+        }
+    }
+
     [[nodiscard]]
     auto stock_count() const -> ItemStockCount {
         std::unordered_map<std::string, std::size_t> out;
