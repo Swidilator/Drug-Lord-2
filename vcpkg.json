@@ -1,0 +1,16 @@
+{
+  "name" : "drug-lord-2",
+  "version-string" : "1.0.0",
+  "builtin-baseline" : "ac7af7424cbaf9057cb246b620f455303dccd6ed",
+  "dependencies" : [ {
+    "name" : "qtbase",
+    "version>=" : "6.10.0#1",
+    "features" : [ "gui", "wayland" ]
+  }, {
+    "name" : "catch2",
+    "version>=" : "3.12.0"
+  }, {
+    "name" : "qtwayland",
+    "version>=" : "6.10.0"
+  } ]
+}
