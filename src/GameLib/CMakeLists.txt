@@ -12,4 +12,8 @@ target_sources(game_lib PUBLIC FILE_SET CXX_MODULES FILES
         Character.ixx
         CharacterRank.ixx
         ItemMarketUpdater.ixx
+        PubSub/PubSub.ixx
+        PubSub/Publisher.ixx
+        PubSub/Message.ixx
+        PubSub/Subscriber.ixx
 )

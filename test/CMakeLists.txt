@@ -7,6 +7,8 @@ target_sources(tests PRIVATE
         Game/Test_Character.cpp
         Game/Test_CharacterRank.cpp
         Game/Test_Location.cpp
+
+        Game/PubSub/Test_PubSub.cpp
 )
 target_sources(tests PRIVATE FILE_SET HEADERS FILES
         test_setup.hpp
