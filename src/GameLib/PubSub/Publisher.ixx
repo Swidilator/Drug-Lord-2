@@ -88,39 +88,43 @@ public:
         queue_.push(message);
     }
 
-    static auto action_next() -> bool {
+    static auto process_next() -> std::vector<PublisherProcessResult> {
         if (queue_.empty()) {
-            return true;
+            return {PublisherProcessResult::Empty};
         }
 
         const auto next_message{queue_.front()};
         queue_.pop();
 
         if (next_message.topic == "quit") {
-            return false;
+            return {PublisherProcessResult::Quit};
         }
 
         if (!subscribers_.contains(next_message.topic)) {
-            return true;
+            return {PublisherProcessResult::Empty};
         }
+
+        std::vector<PublisherProcessResult> results{};
 
         for (auto& ptr : subscribers_.at(next_message.topic)) {
             if (const auto p = ptr.lock()) {
                 p->handle_event(next_message);
+                results.push_back(PublisherProcessResult::Success);
             }
 
             else {
                 std::println("Invalid Subscriber on topic {}", next_message.topic);
+                results.push_back(PublisherProcessResult::InvalidSubscriber);
             }
         }
 
-        return true;
+        return results;
     }
 
-    static auto action_all() -> bool {
-        bool final_status{};
+    static auto process_all() -> std::vector<PublisherProcessResult> {
+        std::vector<PublisherProcessResult> final_status{};
         while (!queue_.empty()) {
-            final_status = action_next();
+            final_status = process_next();
         }
         return final_status;
     }
