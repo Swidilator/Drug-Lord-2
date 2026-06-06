@@ -13,6 +13,25 @@ import :Message;
 import :Subscriber;
 
 
+export enum class PublisherProcessResult {
+    Success,
+    InvalidSubscriber,
+    Quit,
+    Empty,
+};
+
+
+static auto to_string(const PublisherProcessResult e) -> const char* {
+    switch (e) {
+    case PublisherProcessResult::Success: return "Success";
+    case PublisherProcessResult::InvalidSubscriber: return "InvalidSubscriber";
+    case PublisherProcessResult::Quit: return "Quit";
+    case PublisherProcessResult::Empty: return "Empty";
+    default: return "Unknown";
+    }
+}
+
+
 export class Publisher {
     inline static std::unordered_map<std::string, std::vector<std::weak_ptr<Subscriber>>> subscribers_;
 
