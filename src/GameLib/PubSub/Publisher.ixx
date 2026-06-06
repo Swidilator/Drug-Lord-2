@@ -32,6 +32,24 @@ public:
         return subscribers_;
     }
 
+    static auto unsubscribe(const std::string& topic, std::weak_ptr<Subscriber> subscriber) -> bool {
+        if (subscriber.expired()) {
+            throw std::logic_error(std::format("Provided Subscriber for topic {} already expired", topic));
+        }
+
+        auto sub_ptr = subscriber.lock();
+
+        for (std::size_t i = 0; i < subscribers_.at(topic).size(); ++i) {
+            auto& comp_ptr{subscribers_.at(topic)[i]};
+            if (!comp_ptr.expired() && comp_ptr.lock() == sub_ptr) {
+                subscribers_.at(topic).erase(subscribers_.at(topic).begin() + i);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     static auto subscribe(const std::string& topic, std::weak_ptr<Subscriber> subscriber) -> void {
         if (subscriber.expired()) {
             throw std::logic_error(std::format("New Subscriber for topic {} already expired", topic));
