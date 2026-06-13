@@ -47,13 +47,19 @@ public:
         }
     }
 
+
     static auto list_subscribers() -> const auto& {
+        // I am unsure about this method; perhaps it should not return subscribers_ as is...
         return subscribers_;
     }
 
     static auto unsubscribe(const std::string& topic, std::weak_ptr<Subscriber> subscriber) -> bool {
         if (subscriber.expired()) {
-            throw std::logic_error(std::format("Provided Subscriber for topic {} already expired", topic));
+            throw std::logic_error(std::format("unsubscribe: Provided Subscriber for topic {} already expired", topic));
+        }
+
+        if (!subscribers_.contains(topic)) {
+            return false;
         }
 
         auto sub_ptr = subscriber.lock();
@@ -62,6 +68,9 @@ public:
             auto& comp_ptr{subscribers_.at(topic)[i]};
             if (!comp_ptr.expired() && comp_ptr.lock() == sub_ptr) {
                 subscribers_.at(topic).erase(subscribers_.at(topic).begin() + i);
+                if (subscribers_.at(topic).size() == 0) {
+                    subscribers_.erase(topic);
+                }
                 return true;
             }
         }
@@ -69,15 +78,24 @@ public:
         return false;
     }
 
+    static auto unsubscribe_all(std::weak_ptr<Subscriber> subscriber) {
+        // Get key_list before for loop due to unsubscribe potentially removing keys and breaking the view
+
+        for (const auto key_list{subscribers_ | std::views::keys | std::ranges::to<std::vector>()}; const auto& k :
+             key_list) {
+            unsubscribe(k, subscriber);
+        }
+    }
+
     static auto subscribe(const std::string& topic, std::weak_ptr<Subscriber> subscriber) -> void {
         if (subscriber.expired()) {
-            throw std::logic_error(std::format("New Subscriber for topic {} already expired", topic));
+            throw std::logic_error(std::format("subscribe: Subscriber for topic {} already expired", topic));
         }
 
         if (subscribers_.contains(topic)) {
             for (const auto& wp : subscribers_.at(topic)) {
                 if (wp.lock() == subscriber.lock()) {
-                    throw std::logic_error(std::format("New Subscriber is already subscribed to topic {}", topic));
+                    return;
                 }
             }
         }

@@ -66,7 +66,8 @@ TEST_CASE("Subscriber: is only registered once for a particular topic", "[Subscr
     Publisher::reset();
     auto test_subscriber = std::make_shared<TestSubscriber>();
     Publisher::subscribe("test_topic", test_subscriber);
-    CHECK_THROWS_AS(Publisher::subscribe("test_topic", test_subscriber), std::logic_error);
+    Publisher::subscribe("test_topic", test_subscriber);
+    CHECK(Publisher::list_subscribers().at("test_topic").size() == 1);
 }
 
 TEST_CASE("Publisher: returns false only when encountering quit topic", "[Publisher]") {
@@ -97,5 +98,14 @@ TEST_CASE("Subscriber: can be unsubscribed from selected topic", "[Subscriber]")
     REQUIRE(test_subscriber->event_messages.size() == 1);
     CHECK(test_subscriber->event_messages[0].topic == "test_topic_2");
 
+    // Now non-existent topic
     CHECK(Publisher::unsubscribe("test_topic", test_subscriber) == false);
+}
+
+TEST_CASE("Publisher: removes topic from subscription list if empty", "[Subscriber]") {
+    Publisher::reset();
+    auto test_subscriber = std::make_shared<TestSubscriber>();
+    Publisher::subscribe("test_topic",test_subscriber);
+    Publisher::unsubscribe("test_topic",test_subscriber);
+    CHECK(Publisher::list_subscribers().size() == 0);
 }
