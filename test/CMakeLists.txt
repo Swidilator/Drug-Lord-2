@@ -9,8 +9,11 @@ target_sources(tests PRIVATE
         Game/Test_Location.cpp
 
         Game/PubSub/Test_PubSub.cpp
+
+        Game/Statecharts/Test_ActionList.cpp
 )
 target_sources(tests PRIVATE FILE_SET HEADERS FILES
         test_setup.hpp
+        Game/Statecharts/test_statecharts_setup.hpp
 )
 target_link_libraries(tests PRIVATE game_lib Qt6::Core Catch2::Catch2WithMain)

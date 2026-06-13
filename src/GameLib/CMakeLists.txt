@@ -16,4 +16,11 @@ target_sources(game_lib PUBLIC FILE_SET CXX_MODULES FILES
         PubSub/Publisher.ixx
         PubSub/Message.ixx
         PubSub/Subscriber.ixx
+        Statecharts/Statecharts.ixx
+        Statecharts/Action.ixx
+        Statecharts/ActionList.ixx
+)
+
+target_sources(game_lib PUBLIC FILE_SET HEADERS FILES
+
 )
